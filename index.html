@@ -1,38 +1,37 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="bn">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>My AI</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MY AI PRO</title>
 <style>
-body{margin:0;background:#000;color:#fff;font-family:sans-serif}
-.header{padding:20px;text-align:center;border-bottom:2px solid #fff;font-size:20px;font-weight:bold}
-.line{height:2px;background:linear-gradient(90deg,black,white,black)}
-.chat{padding:20px}
-.msg{background:#222;padding:12px;border-radius:12px;margin:10px 0}
-.input{position:fixed;bottom:0;left:0;right:0;padding:10px;background:#000;display:flex;gap:10px;border-top:1px solid #333}
-input{flex:1;padding:12px;border-radius:20px;border:1px solid #333;background:#111;color:#fff}
-button{padding:12px 20px;border-radius:20px;border:none;background:#fff;color:#000;font-weight:bold}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#000;color:#fff;font-family:system-ui;min-height:100vh;overflow:hidden}
+.header{padding:20px 24px;display:flex;justify-content:space-between;align-items:center}
+.logo{width:48px;height:48px;background:linear-gradient(135deg,#a855f7,#6366f1);border-radius:50%;display:grid;place-items:center;font-size:22px}
+.title{font-weight:800;font-size:18px}
+.pro{background:#1a1a1a;border:1px solid #333;padding:4px 10px;border-radius:20px;font-size:11px;margin-left:8px}
+.orb-wrap{height:38vh;display:grid;place-items:center}
+.orb{width:200px;height:200px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#c084fc,#7c3aed 40%,#1e3a8a 80%);box-shadow:0 0 80px rgba(168,85,247,.5);animation:pulse 3s infinite;position:relative}
+.orb::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:28px;height:28px;background:#fff;border-radius:50%}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+.wave{height:40px;display:flex;justify-content:center;gap:3px}
+.bar{width:4px;background:linear-gradient(#a855f7,#3b82f6);border-radius:4px;animation:wave 1s infinite}
+@keyframes wave{0%,100%{height:8px}50%{height:28px}}
+.input{position:fixed;bottom:0;left:0;right:0;padding:12px 16px;background:#000;display:flex;gap:10px}
+input{flex:1;background:#111;border:1px solid #222;border-radius:24px;padding:14px 18px;color:#fff;outline:none}
+button{background:#fff;color:#000;border:none;border-radius:24px;padding:14px 22px;font-weight:700}
 </style>
 </head>
 <body>
-<div class="header">My AI - নিজের সহকারী</div>
-<div class="line"></div>
-<div class="chat" id="chat">
-<div class="msg">হ্যালো! আমি তোমার AI সহকারী। কাজ করছে! 😊</div>
+<div style="padding:10px 20px;display:flex;justify-content:space-between;opacity:.7;font-size:14px"><span>9:41</span><span>📶 🔋</span></div>
+<div class="header">
+<div style="display:flex;gap:12px;align-items:center"><div class="logo">✨</div><div><div class="title">MY AI <span class="pro">PRO</span></div><div style="font-size:12px;color:#22c55e">● Online • GPT-4o</div></div></div><div>👑</div>
 </div>
-<div class="input">
-<input id="t" placeholder="কিছু লিখো...">
-<button onclick="send()">Send</button>
-</div>
-<script>
-function send(){
-let v=document.getElementById('t').value;
-if(!v)return;
-document.getElementById('chat').innerHTML+='<div class=msg>'+v+'</div>';
-document.getElementById('t').value='';
-setTimeout(()=>{document.getElementById('chat').innerHTML+='<div class=msg>✅ "'+v+'" - পেয়েছি! এপ কাজ করছে!</div>';},500);
-}
-</script>
+<div style="padding:20px 24px"><h1 style="font-size:36px;font-weight:900">হ্যালো, <span style="color:#a855f7">বস</span> 👋</h1><p style="color:#888;margin-top:8px">কি হেল্প লাগবে আজকে? আমি full ready.</p></div>
+<div class="orb-wrap"><div class="orb"></div></div>
+<div class="wave"><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div></div>
+<div style="text-align:center;color:#555;font-size:12px;margin-top:8px">LISTENING • BANGLA + ENGLISH</div>
+<div class="input"><input id="q" placeholder="কিছু লিখো..."><button onclick="alert('তুমি: '+document.getElementById('q').value)">Send</button></div>
 </body>
 </html>
