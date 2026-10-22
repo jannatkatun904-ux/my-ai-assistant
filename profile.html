@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profile Settings - MY AI PRO</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#000;color:#fff;font-family:system-ui;padding:20px}
+.header{display:flex;align-items:center;gap:12px;margin-bottom:30px}
+.back{width:40px;height:40px;background:#111;border:1px solid #222;border-radius:50%;display:grid;place-items:center}
+.title{font-weight:800;font-size:20px}
+.avatar-box{text-align:center;margin:20px 0}
+.avatar{width:120px;height:120px;border-radius:50%;object-fit:cover;border:3px solid #a855f7;box-shadow:0 0 30px rgba(168,85,247,.5)}
+.upload{margin-top:15px;background:#111;border:1px solid #222;border-radius:20px;padding:10px 20px;color:#a855f7}
+.field{margin:18px 0}
+.field label{display:block;color:#888;font-size:12px;margin-bottom:8px;letter-spacing:1px}
+.field input{width:100%;background:#111;border:1px solid #222;border-radius:14px;padding:14px;color:#fff;outline:none}
+.save{width:100%;background:#fff;color:#000;border:none;border-radius:14px;padding:16px;font-weight:800;font-size:16px;margin-top:20px}
+.note{color:#555;font-size:11px;text-align:center;margin-top:15px}
+</style>
+</head>
+<body>
+<div class="header">
+<a href="index.html" class="back">←</a>
+<div class="title">Profile Settings</div>
+</div>
+
+<div class="avatar-box">
+<img id="preview" src="avatar.jpg" class="avatar" onerror="this.src='https://i.imgur.com/8Km9tLL.png'">
+<br>
+<input type="file" id="file" accept="image/*" hidden>
+<button class="upload" onclick="document.getElementById('file').click()">📸 ছবি চেঞ্জ করো</button>
+</div>
+
+<div class="field">
+<label>তোমার নাম</label>
+<input id="name" placeholder="যেমন: বস, জান্নাত" value="বস">
+</div>
+
+<div class="field">
+<label>AI এর নাম</label>
+<input id="aiName" placeholder="যেমন: MY AI PRO" value="MY AI PRO">
+</div>
+
+<div class="field">
+<label>Status</label>
+<input id="status" placeholder="যেমন: Avatar Mode" value="Avatar Mode">
+</div>
+
+<button class="save" onclick="save()">💾 Save করো</button>
+<p class="note">Save করলে তোমার main এপে সাথে সাথে আপডেট হয়ে যাবে</p>
+
+<script>
+const fileInput=document.getElementById('file');
+const preview=document.getElementById('preview');
+fileInput.onchange=e=>{
+ const f=e.target.files[0];
+ if(!f) return;
+ const reader=new FileReader();
+ reader.onload=ev=>{
+   preview.src=ev.target.result;
+   localStorage.setItem('myai_avatar', ev.target.result);
+ };
+ reader.readAsDataURL(f);
+};
+// load saved
+let savedAvatar=localStorage.getItem('myai_avatar');
+if(savedAvatar) preview.src=savedAvatar;
+document.getElementById('name').value=localStorage.getItem('myai_name')||'বস';
+document.getElementById('aiName').value=localStorage.getItem('myai_aiName')||'MY AI PRO';
+document.getElementById('status').value=localStorage.getItem('myai_status')||'Avatar Mode';
+
+function save(){
+ const name=document.getElementById('name').value;
+ const aiName=document.getElementById('aiName').value;
+ const status=document.getElementById('status').value;
+ localStorage.setItem('myai_name', name);
+ localStorage.setItem('myai_aiName', aiName);
+ localStorage.setItem('myai_status', status);
+ alert('✅ সেভ হয়ে গেছে বস! এখন Home এ যাও');
+ location.href='index.html';
+}
+</script>
+</body>
+</html>
