@@ -4,214 +4,402 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#100b24">
-  <title>MY AI PRO</title>
+  <meta name="theme-color" content="#090914">
+  <title>My AI Assistant</title>
+
   <style>
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-      margin: 0; font-family: Arial, sans-serif;
-      background: #100b24; color: white;
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #090914;
+      color: white;
+    }
+
+    .app {
+      max-width: 520px;
       min-height: 100vh;
+      margin: auto;
+      display: flex;
+      flex-direction: column;
+      background: radial-gradient(circle at top, #30205d, #090914 48%);
     }
+
     header {
-      text-align: center; padding: 22px 12px;
-      background: #211444; border-bottom: 1px solid #6544a8;
+      padding: 18px;
+      text-align: center;
+      border-bottom: 1px solid #30294b;
     }
+
+    header h1 {
+      margin: 0;
+      color: #d7b8ff;
+      font-size: 23px;
+    }
+
+    header p {
+      margin: 7px 0 0;
+      color: #aaa4c5;
+      font-size: 13px;
+    }
+
+    .avatar-area {
+      text-align: center;
+      padding: 24px 12px 12px;
+    }
+
     .avatar {
-      width: 86px; height: 86px; margin: auto auto 10px;
-      border-radius: 50%; display: grid; place-items: center;
-      background: linear-gradient(135deg,#b15cff,#4225a7);
-      font-size: 48px; box-shadow: 0 0 25px #914dff66;
+      width: 145px;
+      height: 145px;
+      border-radius: 50%;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 85px;
+      background: linear-gradient(135deg, #bd83ff, #4726a8);
+      border: 4px solid #d8b5ff;
+      box-shadow: 0 0 35px #8c49ff66;
     }
-    h1 { margin: 8px 0; font-size: 25px; }
-    header p { margin: 5px; color: #d0c2ff; font-size: 13px; }
-    #chat {
-      padding: 16px; height: 47vh; min-height: 230px;
+
+    .status {
+      color: #8fffc1;
+      margin-top: 12px;
+      font-size: 13px;
+    }
+
+    #messages {
+      flex: 1;
+      min-height: 180px;
+      max-height: 36vh;
       overflow-y: auto;
+      padding: 14px;
     }
-    .msg {
-      padding: 12px 14px; border-radius: 16px;
-      margin: 10px 0; max-width: 88%;
-      line-height: 1.5; white-space: pre-wrap;
+
+    .message {
+      padding: 12px 14px;
+      border-radius: 16px;
+      margin-bottom: 10px;
+      line-height: 1.65;
       overflow-wrap: anywhere;
+      white-space: pre-wrap;
     }
-    .bot { background: #2b2048; border: 1px solid #49366e; }
-    .user { background: #713ee5; margin-left: auto; }
-    .controls { padding: 12px; }
-    .inputrow { display: flex; gap: 8px; }
-    input {
-      min-width: 0; flex: 1; padding: 14px;
-      border: 1px solid #60458e; border-radius: 14px;
-      color: white; background: #211738; font-size: 16px;
+
+    .bot {
+      background: #211a38;
+      border: 1px solid #443365;
+      margin-right: 22px;
     }
-    button {
-      border: 0; border-radius: 12px; padding: 12px;
-      color: white; background: #7545e8; font-size: 15px;
+
+    .user {
+      background: #6036aa;
+      margin-left: 35px;
     }
-    .tools { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
-    .tools button { flex: 1; min-width: 100px; background: #30204e; }
-    #status { text-align: center; color: #c5b5f5; font-size: 12px; padding: 6px; }
+
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 9px;
+      padding: 12px;
+    }
+
+    .quick-actions button {
+      background: #171329;
+      color: white;
+      border: 1px solid #49366d;
+      padding: 12px 6px;
+      border-radius: 12px;
+      font-size: 14px;
+    }
+
+    .input-area {
+      padding: 12px;
+      display: flex;
+      gap: 8px;
+      border-top: 1px solid #30294b;
+      background: #0d0b19;
+    }
+
+    #userInput {
+      min-width: 0;
+      flex: 1;
+      background: #201a32;
+      border: 1px solid #59417e;
+      color: white;
+      padding: 13px;
+      border-radius: 24px;
+      font-size: 15px;
+      outline: none;
+    }
+
+    .action-btn {
+      border: none;
+      border-radius: 50%;
+      width: 46px;
+      min-width: 46px;
+      height: 46px;
+      color: white;
+      font-size: 19px;
+      background: #7846d8;
+    }
+
+    .mic {
+      background: #b82f72;
+    }
+
+    footer {
+      color: #8e87a8;
+      text-align: center;
+      font-size: 11px;
+      padding: 8px;
+    }
   </style>
 </head>
+
 <body>
+<div class="app">
+
   <header>
-    <div class="avatar">👩🏻‍💻</div>
-    <h1>MY AI PRO</h1>
-    <p>তোমার ব্যক্তিগত বাংলা AI Assistant</p>
+    <h1>MY AI ASSISTANT</h1>
+    <p>আপনার ব্যক্তিগত বাংলা AI সহকারী</p>
   </header>
 
-  <main id="chat" aria-live="polite">
-    <div class="msg bot">আসসালামু আলাইকুম! আমি MY AI PRO। 😊
-আমাকে বাংলায় লিখে বা মাইক্রোফোনে কথা বলে নির্দেশ দিতে পারো।</div>
-  </main>
-
-  <div id="status">Assistant প্রস্তুত</div>
-
-  <section class="controls">
-    <div class="inputrow">
-      <input id="q" placeholder="এখানে বাংলায় লিখো..." autocomplete="off">
-      <button id="send">পাঠাও</button>
-    </div>
-    <div class="tools">
-      <button id="mic">🎙️ কথা বলো</button>
-      <button id="speak">🔊 কণ্ঠ চালু</button>
-      <button id="stop">⏹️ থামাও</button>
-    </div>
+  <section class="avatar-area">
+    <div class="avatar" aria-label="AI avatar">👩🏻</div>
+    <div class="status" id="status">● প্রস্তুত আছি</div>
   </section>
 
-  <script>
-    const chat = document.getElementById("chat");
-    const input = document.getElementById("q");
-    const statusBox = document.getElementById("status");
+  <main id="messages" aria-live="polite">
+    <div class="message bot">
+      আসসালামু আলাইকুম! 😊 আমি আপনার AI সহকারী।
+      আমাকে বাংলায় লিখে অথবা মাইক্রোফোনে কথা বলে নির্দেশ দিন।
+    </div>
+  </main>
 
-    function addMessage(text, type) {
-      const el = document.createElement("div");
-      el.className = "msg " + type;
-      el.textContent = text;
-      chat.appendChild(el);
-      chat.scrollTop = chat.scrollHeight;
-      return el;
+  <section class="quick-actions">
+    <button onclick="openSite('youtube')">▶ YouTube খুলুন</button>
+    <button onclick="openSite('whatsapp')">💬 WhatsApp খুলুন</button>
+    <button onclick="openSite('facebook')">📘 Facebook খুলুন</button>
+    <button onclick="openSite('google')">🔎 Google খুলুন</button>
+  </section>
+
+  <div class="input-area">
+    <input id="userInput" type="text"
+      placeholder="এখানে বাংলায় লিখুন..."
+      autocomplete="off">
+
+    <button class="action-btn mic"
+      onclick="startListening()" title="কথা বলুন">🎙️</button>
+
+    <button class="action-btn"
+      onclick="sendMessage()" title="পাঠান">➤</button>
+  </div>
+
+  <footer>
+    নারী কণ্ঠের প্রাপ্যতা আপনার ফোনের বাংলা Text-to-Speech ভয়েসের ওপর নির্ভর করে।
+  </footer>
+
+</div>
+
+<script>
+  const messages = document.getElementById("messages");
+  const input = document.getElementById("userInput");
+  const statusText = document.getElementById("status");
+
+  function addMessage(text, type) {
+    const item = document.createElement("div");
+    item.className = "message " + type;
+    item.textContent = text;
+    messages.appendChild(item);
+    messages.scrollTop = messages.scrollHeight;
+  }
+
+  // ফোনে থাকা বাংলা কণ্ঠ ব্যবহার করা হবে।
+  // নারী কণ্ঠ পেতে ফোনের Text-to-Speech সেটিংসে উপযুক্ত ভয়েস নির্বাচন করুন।
+  function speak(text) {
+    if (!("speechSynthesis" in window)) {
+      statusText.textContent = "এই ব্রাউজারে কণ্ঠ সমর্থিত নয়";
+      return;
     }
 
-    function speak(text) {
-      if (!("speechSynthesis" in window)) {
-        statusBox.textContent = "এই ব্রাউজারে কণ্ঠ সুবিধা নেই।";
-        return;
-      }
-      speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = "bn-BD";
-      utterance.rate = 0.92;
-      const voices = speechSynthesis.getVoices();
-      const female = voices.find(v =>
-        /female|woman|zira|samantha/i.test(v.name) &&
-        /^bn/i.test(v.lang)
-      ) || voices.find(v => /^bn/i.test(v.lang));
-      if (female) utterance.voice = female;
-      speechSynthesis.speak(utterance);
+    window.speechSynthesis.cancel();
+
+    const speech = new SpeechSynthesisUtterance(text);
+    speech.lang = "bn-BD";
+    speech.rate = 0.9;
+    speech.pitch = 1.08;
+
+    const voices = window.speechSynthesis.getVoices();
+    const bengaliVoice = voices.find(v =>
+      v.lang && v.lang.toLowerCase().startsWith("bn")
+    );
+
+    if (bengaliVoice) {
+      speech.voice = bengaliVoice;
     }
 
-    function openApp(command) {
-      const text = command.toLowerCase();
+    speech.onstart = () => {
+      statusText.textContent = "● কথা বলছি...";
+    };
 
-      if (text.includes("youtube")) {
-        window.location.href = "https://www.youtube.com/";
-        return "YouTube খোলার চেষ্টা করছি।";
-      }
-      if (text.includes("whatsapp")) {
-        window.location.href = "https://www.whatsapp.com/";
-        return "WhatsApp খোলার চেষ্টা করছি।";
-      }
-      if (text.includes("facebook")) {
-        window.location.href = "https://www.facebook.com/";
-        return "Facebook খোলার চেষ্টা করছি।";
-      }
-      if (text.includes("google")) {
-        window.location.href = "https://www.google.com/";
-        return "Google খোলার চেষ্টা করছি।";
-      }
-      return null;
+    speech.onend = () => {
+      statusText.textContent = "● প্রস্তুত আছি";
+    };
+
+    speech.onerror = () => {
+      statusText.textContent = "কণ্ঠ চালু হয়নি";
+    };
+
+    window.speechSynthesis.speak(speech);
+  }
+
+  function openSite(name) {
+    const sites = {
+      youtube: "https://www.youtube.com/",
+      whatsapp: "https://www.whatsapp.com/",
+      facebook: "https://www.facebook.com/",
+      google: "https://www.google.com/"
+    };
+
+    const labels = {
+      youtube: "YouTube",
+      whatsapp: "WhatsApp",
+      facebook: "Facebook",
+      google: "Google"
+    };
+
+    if (sites[name]) {
+      addMessage(labels[name] + " খুলছি।", "bot");
+      window.open(sites[name], "_blank");
+    }
+  }
+
+  function getReply(text) {
+    const q = text.toLowerCase().trim();
+
+    if (/আসসালামু|সালাম/.test(q)) {
+      return "ওয়ালাইকুম আসসালাম! 😊 আপনাকে কীভাবে সাহায্য করতে পারি?";
     }
 
-    function answer(text) {
-      const cmd = text.toLowerCase();
-
-      if (/সময়|সময়|time/.test(cmd)) {
-        return "এখন তোমার ফোনের সময় " +
-          new Date().toLocaleTimeString("bn-BD") + "।";
-      }
-      if (/তারিখ|date/.test(cmd)) {
-        return "আজ " + new Date().toLocaleDateString("bn-BD") + "।";
-      }
-      if (/তোমার নাম|তুমি কে|তোমার পরিচয়/.test(cmd)) {
-        return "আমি MY AI PRO, তোমার ব্যক্তিগত Assistant।";
-      }
-      if (/খবর|news/.test(cmd)) {
-        return "সর্বশেষ খবর জানতে ইন্টারনেটের খবরের সাইট খুলতে পারো। লাইভ AI খবরের জন্য আলাদা Gemini API সংযোগ করতে হবে।";
-      }
-      if (/হ্যালো|হাই|আসসালামু/.test(cmd)) {
-        return "ওয়ালাইকুম আসসালাম! বলো, কীভাবে সাহায্য করতে পারি?";
-      }
-      return "তোমার কথা বুঝেছি: “" + text +
-        "”। আমি এখনো Gemini AI-এর সঙ্গে যুক্ত নই। সম্পূর্ণ AI উত্তর পেতে নিরাপদ API সংযোগ দরকার।";
+    if (/হ্যালো|হাই|হ্যালো/.test(q)) {
+      return "হ্যালো! আমি আপনার AI সহকারী। কী করতে চান বলুন।";
     }
 
-    function send() {
-      const text = input.value.trim();
-      if (!text) return;
-      addMessage(text, "user");
-      input.value = "";
-
-      const opened = openApp(text);
-      if (opened) {
-        addMessage(opened, "bot");
-        statusBox.textContent = "কমান্ড সম্পন্ন করার চেষ্টা চলছে";
-        return;
-      }
-
-      const reply = answer(text);
-      addMessage(reply, "bot");
-      statusBox.textContent = "উত্তর দেওয়া হয়েছে";
-      if (document.body.dataset.voice === "on") speak(reply);
+    if (/তোমার নাম|কে তুমি|তুমি কে/.test(q)) {
+      return "আমি আপনার My AI Assistant। আমি বাংলায় কথা বলতে এবং কিছু ওয়েবসাইট খুলতে সাহায্য করতে পারি।";
     }
 
-    document.getElementById("send").addEventListener("click", send);
-    input.addEventListener("keydown", e => {
-      if (e.key === "Enter") send();
-    });
+    if (/সময়|কয়টা বাজে|কটা বাজে/.test(q)) {
+      return "এখন আপনার ফোনের সময় " +
+        new Date().toLocaleTimeString("bn-BD", {
+          hour: "numeric",
+          minute: "2-digit"
+        });
+    }
 
-    document.getElementById("speak").addEventListener("click", () => {
-      document.body.dataset.voice = "on";
-      statusBox.textContent = "উত্তর শোনার সুবিধা চালু";
-      speak("আমি MY AI PRO। কীভাবে সাহায্য করতে পারি?");
-    });
+    if (/তারিখ|আজ কত তারিখ|আজকের তারিখ/.test(q)) {
+      return "আজ " + new Date().toLocaleDateString("bn-BD", {
+        year: "numeric",
+        month: "long",
+        day: "numeric"
+      });
+    }
 
-    document.getElementById("stop").addEventListener("click", () => {
-      if ("speechSynthesis" in window) speechSynthesis.cancel();
-      statusBox.textContent = "কণ্ঠ থামানো হয়েছে";
-    });
+    if (/ইউটিউব|youtube/.test(q)) {
+      openSite("youtube");
+      return "YouTube খোলার চেষ্টা করছি।";
+    }
 
+    if (/হোয়াটসঅ্যাপ|হোয়াটসঅ্যাপ|whatsapp/.test(q)) {
+      openSite("whatsapp");
+      return "WhatsApp খোলার চেষ্টা করছি।";
+    }
+
+    if (/ফেসবুক|facebook/.test(q)) {
+      openSite("facebook");
+      return "Facebook খোলার চেষ্টা করছি।";
+    }
+
+    if (/গুগল|google/.test(q)) {
+      openSite("google");
+      return "Google খোলার চেষ্টা করছি।";
+    }
+
+    if (/খবর|নিউজ|news|বিশ্বের খবর/.test(q)) {
+      return "আমি এই সংস্করণে সরাসরি নতুন খবর পড়তে পারি না। বর্তমান খবর দেখতে Google খুলে অনুসন্ধান করুন।";
+    }
+
+    if (/ধন্যবাদ/.test(q)) {
+      return "আপনাকে স্বাগতম! 😊 আর কী সাহায্য করতে পারি?";
+    }
+
+    return "আপনার কথা বুঝেছি: " + text +
+      "\nএই সংস্করণে আমার উত্তর সীমিত। সাধারণ প্রশ্নের বুদ্ধিমান উত্তর দিতে একটি নিরাপদ AI API সংযোগ করতে হবে।";
+  }
+
+  function sendMessage() {
+    const text = input.value.trim();
+
+    if (!text) return;
+
+    addMessage(text, "user");
+    input.value = "";
+
+    const reply = getReply(text);
+    addMessage(reply, "bot");
+    speak(reply);
+  }
+
+  input.addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
+      sendMessage();
+    }
+  });
+
+  function startListening() {
     const SpeechRecognition =
-      window.SpeechRecognition || window.webkitSpeechRecognition;
+      window.SpeechRecognition ||
+      window.webkitSpeechRecognition;
 
-    document.getElementById("mic").addEventListener("click", () => {
-      if (!SpeechRecognition) {
-        statusBox.textContent =
-          "ভয়েস ইনপুট সমর্থিত নয়। Chrome-এ চেষ্টা করো।";
-        return;
-      }
-      const recognition = new SpeechRecognition();
-      recognition.lang = "bn-BD";
-      recognition.interimResults = false;
-      recognition.onstart = () => statusBox.textContent = "শুনছি...";
-      recognition.onresult = e => {
-        input.value = e.results[0][0].transcript;
-        send();
-      };
-      recognition.onerror = () => statusBox.textContent =
-        "মাইক্রোফোন কাজ করেনি। অনুমতি ও ইন্টারনেট পরীক্ষা করো।";
-      recognition.start();
-    });
-  </script>
+    if (!SpeechRecognition) {
+      addMessage(
+        "আপনার ব্রাউজারে বাংলা ভয়েস ইনপুট সমর্থিত নয়। Android-এর Chrome ব্যবহার করে চেষ্টা করুন।",
+        "bot"
+      );
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.lang = "bn-BD";
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    recognition.onstart = () => {
+      statusText.textContent = "● আপনার কথা শুনছি...";
+    };
+
+    recognition.onresult = (event) => {
+      input.value = event.results[0][0].transcript;
+      sendMessage();
+    };
+
+    recognition.onerror = () => {
+      statusText.textContent = "মাইক্রোফোনে সমস্যা হয়েছে";
+    };
+
+    recognition.onend = () => {
+      statusText.textContent = "● প্রস্তুত আছি";
+    };
+
+    recognition.start();
+  }
+
+  if ("speechSynthesis" in window) {
+    window.speechSynthesis.getVoices();
+  }
+</script>
 </body>
 </html>
