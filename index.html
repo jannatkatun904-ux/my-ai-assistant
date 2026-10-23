@@ -1,195 +1,217 @@
 
-<!doctype html>
+<!DOCTYPE html>
 <html lang="bn">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MY AI PRO</title>
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#000000">
-<style>
-*{box-sizing:border-box}
-body{margin:0;background:#000;color:#fff;font-family:system-ui,sans-serif;
-height:100dvh;display:flex;flex-direction:column;overflow:hidden}
-.top{padding:8px 18px;font-size:12px;opacity:.6}
-.head{padding:12px 18px;display:flex;justify-content:space-between;
-align-items:center;border-bottom:1px solid #222}
-.logo{width:45px;height:45px;border-radius:50%;object-fit:cover;border:2px solid #a855f7}
-.title{font-weight:800;font-size:17px}
-.online{font-size:11px;color:#22c55e}
-.greet{padding:12px 20px 5px}
-.greet h1{font-size:27px;margin:0}
-.greet span{color:#a855f7}
-.avatar{width:125px;height:125px;object-fit:cover;border-radius:50%;
-border:3px solid #a855f7;box-shadow:0 0 30px #7e22ce;
-display:block;margin:8px auto;animation:pulse 3s infinite}
-@keyframes pulse{50%{transform:scale(1.04);box-shadow:0 0 45px #a855f7}}
-.line{height:2px;width:65%;margin:5px auto 12px;
-background:linear-gradient(90deg,transparent,#a855f7,transparent)}
-.chat{flex:1;min-height:0;overflow-y:auto;padding:12px 16px;
-display:flex;flex-direction:column;gap:10px}
-.bubble{padding:11px 14px;border-radius:17px;max-width:88%;
-font-size:14px;line-height:1.5;overflow-wrap:anywhere}
-.user{align-self:flex-end;background:#fff;color:#000}
-.ai{align-self:flex-start;background:#171717;border:1px solid #333}
-.input{padding:10px;display:flex;gap:7px;border-top:1px solid #222}
-input{min-width:0;flex:1;background:#171717;color:white;border:1px solid #333;
-border-radius:25px;padding:12px;font-size:15px;outline:none}
-button{border:0;border-radius:25px;padding:12px 15px;font-weight:bold;cursor:pointer}
-.send{background:#a855f7;color:white}
-.mic{background:#222;color:white;border:1px solid #a855f7;font-size:18px}
-.status{text-align:center;font-size:11px;color:#aaa;padding:3px}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#100b24">
+  <title>MY AI PRO</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; font-family: Arial, sans-serif;
+      background: #100b24; color: white;
+      min-height: 100vh;
+    }
+    header {
+      text-align: center; padding: 22px 12px;
+      background: #211444; border-bottom: 1px solid #6544a8;
+    }
+    .avatar {
+      width: 86px; height: 86px; margin: auto auto 10px;
+      border-radius: 50%; display: grid; place-items: center;
+      background: linear-gradient(135deg,#b15cff,#4225a7);
+      font-size: 48px; box-shadow: 0 0 25px #914dff66;
+    }
+    h1 { margin: 8px 0; font-size: 25px; }
+    header p { margin: 5px; color: #d0c2ff; font-size: 13px; }
+    #chat {
+      padding: 16px; height: 47vh; min-height: 230px;
+      overflow-y: auto;
+    }
+    .msg {
+      padding: 12px 14px; border-radius: 16px;
+      margin: 10px 0; max-width: 88%;
+      line-height: 1.5; white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+    .bot { background: #2b2048; border: 1px solid #49366e; }
+    .user { background: #713ee5; margin-left: auto; }
+    .controls { padding: 12px; }
+    .inputrow { display: flex; gap: 8px; }
+    input {
+      min-width: 0; flex: 1; padding: 14px;
+      border: 1px solid #60458e; border-radius: 14px;
+      color: white; background: #211738; font-size: 16px;
+    }
+    button {
+      border: 0; border-radius: 12px; padding: 12px;
+      color: white; background: #7545e8; font-size: 15px;
+    }
+    .tools { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .tools button { flex: 1; min-width: 100px; background: #30204e; }
+    #status { text-align: center; color: #c5b5f5; font-size: 12px; padding: 6px; }
+  </style>
 </head>
 <body>
-<div class="top">MY AI PRO • ANDROID ASSISTANT</div>
+  <header>
+    <div class="avatar">👩🏻‍💻</div>
+    <h1>MY AI PRO</h1>
+    <p>তোমার ব্যক্তিগত বাংলা AI Assistant</p>
+  </header>
 
-<div class="head">
-  <div style="display:flex;gap:10px;align-items:center">
-    <img src="avatar.jpg" class="logo" alt="AI avatar">
-    <div>
-      <div class="title">MY AI PRO</div>
-      <div class="online">● বাংলা সহকারী</div>
+  <main id="chat" aria-live="polite">
+    <div class="msg bot">আসসালামু আলাইকুম! আমি MY AI PRO। 😊
+আমাকে বাংলায় লিখে বা মাইক্রোফোনে কথা বলে নির্দেশ দিতে পারো।</div>
+  </main>
+
+  <div id="status">Assistant প্রস্তুত</div>
+
+  <section class="controls">
+    <div class="inputrow">
+      <input id="q" placeholder="এখানে বাংলায় লিখো..." autocomplete="off">
+      <button id="send">পাঠাও</button>
     </div>
-  </div>
-  <a href="profile.html" style="color:white;text-decoration:none">👑</a>
-</div>
+    <div class="tools">
+      <button id="mic">🎙️ কথা বলো</button>
+      <button id="speak">🔊 কণ্ঠ চালু</button>
+      <button id="stop">⏹️ থামাও</button>
+    </div>
+  </section>
 
-<div class="greet">
-  <h1>হ্যালো, <span>বস</span> 👋</h1>
-  <p style="font-size:13px">আমি আপনার বাংলা ভয়েস সহকারী।</p>
-</div>
+  <script>
+    const chat = document.getElementById("chat");
+    const input = document.getElementById("q");
+    const statusBox = document.getElementById("status");
 
-<img src="avatar.jpg" class="avatar" alt="রোবট সহকারী">
-<div class="line"></div>
-<div class="status" id="status">কথা বলতে 🎤 চাপুন</div>
+    function addMessage(text, type) {
+      const el = document.createElement("div");
+      el.className = "msg " + type;
+      el.textContent = text;
+      chat.appendChild(el);
+      chat.scrollTop = chat.scrollHeight;
+      return el;
+    }
 
-<div class="chat" id="chat">
-  <div class="bubble ai">হ্যালো বস! 😊 আমাকে বাংলায় কিছু বলুন।</div>
-</div>
+    function speak(text) {
+      if (!("speechSynthesis" in window)) {
+        statusBox.textContent = "এই ব্রাউজারে কণ্ঠ সুবিধা নেই।";
+        return;
+      }
+      speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = "bn-BD";
+      utterance.rate = 0.92;
+      const voices = speechSynthesis.getVoices();
+      const female = voices.find(v =>
+        /female|woman|zira|samantha/i.test(v.name) &&
+        /^bn/i.test(v.lang)
+      ) || voices.find(v => /^bn/i.test(v.lang));
+      if (female) utterance.voice = female;
+      speechSynthesis.speak(utterance);
+    }
 
-<div class="input">
-  <button class="mic" id="mic" onclick="listen()" aria-label="কথা বলুন">🎤</button>
-  <input id="q" placeholder="এখানে লিখুন..." autocomplete="off">
-  <button class="send" onclick="send()">➤</button>
-</div>
+    function openApp(command) {
+      const text = command.toLowerCase();
 
-<script>
-const chat = document.getElementById('chat');
-const input = document.getElementById('q');
-const statusText = document.getElementById('status');
+      if (text.includes("youtube")) {
+        window.location.href = "https://www.youtube.com/";
+        return "YouTube খোলার চেষ্টা করছি।";
+      }
+      if (text.includes("whatsapp")) {
+        window.location.href = "https://www.whatsapp.com/";
+        return "WhatsApp খোলার চেষ্টা করছি।";
+      }
+      if (text.includes("facebook")) {
+        window.location.href = "https://www.facebook.com/";
+        return "Facebook খোলার চেষ্টা করছি।";
+      }
+      if (text.includes("google")) {
+        window.location.href = "https://www.google.com/";
+        return "Google খোলার চেষ্টা করছি।";
+      }
+      return null;
+    }
 
-function add(text,type){
-  const d=document.createElement('div');
-  d.className='bubble '+type;
-  d.textContent=text;
-  chat.appendChild(d);
-  chat.scrollTop=chat.scrollHeight;
-}
+    function answer(text) {
+      const cmd = text.toLowerCase();
 
-function speak(text){
-  if(!('speechSynthesis' in window)){
-    statusText.textContent='এই ব্রাউজারে কণ্ঠস্বর সমর্থিত নয়';
-    return;
-  }
-  speechSynthesis.cancel();
-  const u=new SpeechSynthesisUtterance(text);
-  u.lang='bn-BD';
-  u.rate=0.92;
-  u.pitch=1.18;
+      if (/সময়|সময়|time/.test(cmd)) {
+        return "এখন তোমার ফোনের সময় " +
+          new Date().toLocaleTimeString("bn-BD") + "।";
+      }
+      if (/তারিখ|date/.test(cmd)) {
+        return "আজ " + new Date().toLocaleDateString("bn-BD") + "।";
+      }
+      if (/তোমার নাম|তুমি কে|তোমার পরিচয়/.test(cmd)) {
+        return "আমি MY AI PRO, তোমার ব্যক্তিগত Assistant।";
+      }
+      if (/খবর|news/.test(cmd)) {
+        return "সর্বশেষ খবর জানতে ইন্টারনেটের খবরের সাইট খুলতে পারো। লাইভ AI খবরের জন্য আলাদা Gemini API সংযোগ করতে হবে।";
+      }
+      if (/হ্যালো|হাই|আসসালামু/.test(cmd)) {
+        return "ওয়ালাইকুম আসসালাম! বলো, কীভাবে সাহায্য করতে পারি?";
+      }
+      return "তোমার কথা বুঝেছি: “" + text +
+        "”। আমি এখনো Gemini AI-এর সঙ্গে যুক্ত নই। সম্পূর্ণ AI উত্তর পেতে নিরাপদ API সংযোগ দরকার।";
+    }
 
-  const voices=speechSynthesis.getVoices();
-  const voice=voices.find(v=>v.lang.toLowerCase().startsWith('bn'));
-  if(voice)u.voice=voice;
+    function send() {
+      const text = input.value.trim();
+      if (!text) return;
+      addMessage(text, "user");
+      input.value = "";
 
-  u.onstart=()=>statusText.textContent='🔊 উত্তর দিচ্ছি...';
-  u.onend=()=>statusText.textContent='কথা বলতে 🎤 চাপুন';
-  u.onerror=()=>statusText.textContent='ভয়েস চালু হয়নি';
-  speechSynthesis.speak(u);
-}
+      const opened = openApp(text);
+      if (opened) {
+        addMessage(opened, "bot");
+        statusBox.textContent = "কমান্ড সম্পন্ন করার চেষ্টা চলছে";
+        return;
+      }
 
-function answer(v){
-  const s=v.toLowerCase();
+      const reply = answer(text);
+      addMessage(reply, "bot");
+      statusBox.textContent = "উত্তর দেওয়া হয়েছে";
+      if (document.body.dataset.voice === "on") speak(reply);
+    }
 
-  if(s.includes('হ্যালো')||s.includes('হাই'))
-    return 'হ্যালো বস! আমি আপনার বাংলা AI সহকারী। কী করতে পারি?';
+    document.getElementById("send").addEventListener("click", send);
+    input.addEventListener("keydown", e => {
+      if (e.key === "Enter") send();
+    });
 
-  if(s.includes('তোমার নাম')||s.includes('নাম কী'))
-    return 'আমার নাম মাই এ আই প্রো। আমি আপনার ডিজিটাল সহকারী।';
+    document.getElementById("speak").addEventListener("click", () => {
+      document.body.dataset.voice = "on";
+      statusBox.textContent = "উত্তর শোনার সুবিধা চালু";
+      speak("আমি MY AI PRO। কীভাবে সাহায্য করতে পারি?");
+    });
 
-  if(s.includes('কয়টা বাজে')||s.includes('সময়')||s.includes('সময়'))
-    return 'এখন সময় '+new Date().toLocaleTimeString('bn-BD',
-      {hour:'numeric',minute:'2-digit'})+'।';
+    document.getElementById("stop").addEventListener("click", () => {
+      if ("speechSynthesis" in window) speechSynthesis.cancel();
+      statusBox.textContent = "কণ্ঠ থামানো হয়েছে";
+    });
 
-  if(s.includes('তারিখ'))
-    return 'আজ '+new Date().toLocaleDateString('bn-BD',
-      {year:'numeric',month:'long',day:'numeric'})+'।';
+    const SpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
 
-  if(s.includes('কেমন আছ'))
-    return 'আমি ভালো আছি বস! আপনার সঙ্গে কথা বলতে প্রস্তুত।';
-
-  if(s.includes('বন্ধ কর')||s.includes('চুপ কর'))
-    return 'ঠিক আছে বস।';
-
-  return 'বস, আপনার কথা শুনেছি: '+v+
-    '। তবে আমার পূর্ণ AI ব্রেইন এখনো সংযুক্ত হয়নি।';
-}
-
-function send(){
-  const v=input.value.trim();
-  if(!v)return;
-  add(v,'user');
-  input.value='';
-  const r=answer(v);
-  add(r,'ai');
-  speak(r);
-}
-
-input.addEventListener('keydown',e=>{
-  if(e.key==='Enter')send();
-});
-
-function listen(){
-  const API=window.SpeechRecognition||window.webkitSpeechRecognition;
-
-  if(!API){
-    statusText.textContent='ভয়েস ইনপুট সমর্থিত নয়। আপডেটেড Chrome-এ চেষ্টা করুন।';
-    add('আপনার ব্রাউজারে কথা শোনার সুবিধা পাওয়া যাচ্ছে না। লিখে কথা বলতে পারেন।','ai');
-    return;
-  }
-
-  try{
-    const rec=new API();
-    rec.lang='bn-BD';
-    rec.continuous=false;
-    rec.interimResults=false;
-
-    rec.onstart=()=>{
-      statusText.textContent='🎤 শুনছি বস, বলুন...';
-      document.getElementById('mic').textContent='🔴';
-    };
-
-    rec.onresult=e=>{
-      input.value=e.results[0][0].transcript;
-      send();
-    };
-
-    rec.onerror=e=>{
-      statusText.textContent=e.error==='not-allowed'
-        ?'মাইক্রোফোন অনুমতি দিন'
-        :'কথা শোনা যায়নি, আবার চেষ্টা করুন';
-      document.getElementById('mic').textContent='🎤';
-    };
-
-    rec.onend=()=>{
-      document.getElementById('mic').textContent='🎤';
-    };
-
-    rec.start();
-  }catch(e){
-    statusText.textContent='আবার মাইক্রোফোন চাপুন';
-  }
-}
-</script>
+    document.getElementById("mic").addEventListener("click", () => {
+      if (!SpeechRecognition) {
+        statusBox.textContent =
+          "ভয়েস ইনপুট সমর্থিত নয়। Chrome-এ চেষ্টা করো।";
+        return;
+      }
+      const recognition = new SpeechRecognition();
+      recognition.lang = "bn-BD";
+      recognition.interimResults = false;
+      recognition.onstart = () => statusBox.textContent = "শুনছি...";
+      recognition.onresult = e => {
+        input.value = e.results[0][0].transcript;
+        send();
+      };
+      recognition.onerror = () => statusBox.textContent =
+        "মাইক্রোফোন কাজ করেনি। অনুমতি ও ইন্টারনেট পরীক্ষা করো।";
+      recognition.start();
+    });
+  </script>
 </body>
 </html>
