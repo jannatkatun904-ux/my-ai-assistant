@@ -1,186 +1,70 @@
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="bn">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#090914">
-<title>MY AI PRO — Assistant</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Boss AI</title>
+<link rel="manifest" href="manifest.json">
 <style>
-*{box-sizing:border-box}
-body{margin:0;background:#090914;color:white;font-family:Arial,sans-serif}
-.app{max-width:500px;height:100dvh;min-height:500px;margin:auto;display:flex;flex-direction:column;background:radial-gradient(ellipse at top,#302052,#090914 55%)}
-header{padding:16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #332747}
-header a{color:#d8b5ff;text-decoration:none}
-.title{font-weight:bold;color:#d8b5ff;font-size:20px}
-.status{font-size:12px;color:#94ffc2;margin-top:5px}
-.avatar-area{text-align:center;padding:15px}
-.avatar{font-size:57px;width:85px;height:85px;border-radius:50%;display:grid;place-items:center;margin:auto;background:linear-gradient(135deg,#a76aff,#35205d);border:2px solid #d9baff}
-#messages{flex:1;overflow:auto;padding:12px}
-.message{padding:12px 14px;margin-bottom:10px;border-radius:15px;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.6}
-.bot{background:#201832;border:1px solid #403056;margin-right:20px}
-.user{background:#6737a9;margin-left:28px}
-.quick{display:flex;gap:8px;padding:10px;overflow-x:auto}
-.quick button{white-space:nowrap;padding:10px;border-radius:12px;border:1px solid #493565;background:#1c1630;color:white}
-.input-area{display:flex;gap:8px;padding:12px;background:#100d1c;border-top:1px solid #332747}
-input{min-width:0;flex:1;border:1px solid #574276;border-radius:24px;background:#201a32;color:white;padding:13px;font-size:15px}
-button{cursor:pointer}
-.send,.mic{width:46px;height:46px;border:0;border-radius:50%;color:white;background:#7846d8;font-size:18px}
-.mic{background:#b82f72}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui;background:#000;color:#fff;height:100vh;overflow:hidden;position:relative}
+.bg{position:absolute;inset:0;background:url('avatar.jpg') center/cover no-repeat}
+.ov{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.6),rgba(0,0,0,.3) 40%,rgba(0,0,0,.9))}
+.top{position:relative;z-index:2;display:flex;justify-content:space-between;padding:12px}
+.left{display:flex;gap:10px;align-items:center}
+.ava{width:46px;height:46px;border-radius:50%;border:2px solid #a855f7;object-fit:cover}
+.boss{font-weight:900;font-size:22px}.boss span{color:#38bdf8}
+.sub{font-size:11px;opacity:.8}
+.badge{background:#065f46;border:1px solid #10b981;color:#10b981;padding:2px 7px;border-radius:10px;font-size:9px;display:inline-block;margin-top:3px}
+.on{background:rgba(20,20,30,.8);border:1px solid #333;border-radius:20px;padding:5px 10px;display:flex;gap:5px;align-items:center;font-size:11px}
+.dot{width:7px;height:7px;background:#22c55e;border-radius:50%}
+.bubble{position:relative;z-index:2;margin:14px;background:rgba(15,30,60,.9);border:1px solid #3b82f6;border-radius:14px;padding:10px;max-width:68%;font-size:12px;line-height:1.5}
+.side{position:absolute;right:10px;top:130px;z-index:2;display:flex;flex-direction:column;gap:8px}
+.sbtn{display:flex;gap:7px;align-items:center;padding:9px 12px;border-radius:12px;border:1px solid;font-size:11px;font-weight:600;min-width:100px}
+.sbtn .ic{width:24px;height:24px;border-radius:50%;display:grid;place-items:center}
+.c1{background:rgba(124,58,237,.25);border-color:#7c3aed;color:#c4b5fd}.c1 .ic{background:#7c3aed}
+.c2{background:rgba(59,130,246,.25);border-color:#3b82f6;color:#93c5fd}.c2 .ic{background:#3b82f6}
+.c3{background:rgba(16,185,129,.25);border-color:#10b981;color:#6ee7b7}.c3 .ic{background:#10b981}
+.c4{background:rgba(249,115,22,.25);border-color:#f97316;color:#fed7aa}.c4 .ic{background:#f97316}
+.c5{background:rgba(236,72,153,.25);border-color:#ec4899;color:#fbcfe8}.c5 .ic{background:#ec4899}
+.mic{position:absolute;bottom:140px;left:50%;transform:translateX(-50%);z-index:2;text-align:center}
+.mbtn{width:80px;height:80px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#7c3aed,#1e3a8a);border:3px solid #8b5cf6;display:grid;place-items:center;font-size:34px}
+.dock{position:absolute;bottom:65px;left:10px;right:10px;z-index:2;background:rgba(10,15,30,.85);border:1px solid #1e293b;border-radius:16px;padding:10px 6px;display:flex;justify-content:space-around}
+.ditem{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:9px}
+.nav{position:absolute;bottom:0;left:0;right:0;z-index:2;background:rgba(0,0,0,.9);border-top:1px solid #1e293b;display:flex;justify-content:space-around;padding:6px 0}
+.nitem{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:9px;color:#64748b}.nitem.active{color:#38bdf8}
 </style>
 </head>
 <body>
-<div class="app">
-<header>
-  <div>
-    <div class="title">✦ MY AI PRO</div>
-    <div id="status" class="status">● প্রস্তুত আছি</div>
-  </div>
-  <a href="home.html">⌂ হোম</a>
-</header>
-
-<section class="avatar-area">
-  <div class="avatar">👩🏻</div>
-</section>
-
-<main id="messages" aria-live="polite">
-  <div class="message bot">আসসালামু আলাইকুম! 😊 আমাকে বাংলায় লিখুন অথবা মাইক্রোফোনে কথা বলুন।</div>
-</main>
-
-<div class="quick">
-  <button onclick="openSite('youtube')">▶ YouTube</button>
-  <button onclick="openSite('whatsapp')">💬 WhatsApp</button>
-  <button onclick="openSite('google')">🔎 Google</button>
+<div class="bg"></div><div class="ov"></div>
+<div class="top">
+<div class="left"><img src="avatar.jpg" class="ava"><div><div class="boss">Boss <span>AI</span></div><div class="sub">আপনার ব্যক্তিগত AI সহকারী</div><div class="badge">🤖 Android Assistant</div></div></div>
+<div style="display:flex;gap:6px"><div class="on"><span class="dot"></span> আমি অনলাইন</div><div style="width:32px;height:32px;background:rgba(20,20,30,.8);border:1px solid #333;border-radius:50%;display:grid;place-items:center">⚙️</div></div>
 </div>
-
-<div class="input-area">
-  <input id="userInput" placeholder="এখানে লিখুন..." autocomplete="off">
-  <button class="mic" onclick="listen()">🎙️</button>
-  <button class="send" onclick="send()">➤</button>
+<div class="bubble">🔊 হ্যালো! আমি BOSS AI<br>আপনার ব্যক্তিগত সহকারী।<br>বলুন, আমি কী করতে পারি?</div>
+<div class="side">
+<div class="sbtn c1"><span class="ic">💬</span> চ্যাট</div>
+<div class="sbtn c2"><span class="ic">🎤</span> ভয়েস কমান্ড</div>
+<div class="sbtn c3"><span class="ic">⊞</span> অ্যাপ খুলুন</div>
+<div class="sbtn c4"><span class="ic">⚙️</span> সেটিংস</div>
+<div class="sbtn c5"><span class="ic">⭐</span> প্রিমিয়াম</div>
 </div>
+<div class="mic"><div class="mbtn">🎤</div><div style="font-size:12px;margin-top:8px;opacity:.7">বলে দেখুন...</div></div>
+<div class="dock">
+<div class="ditem"><div style="background:#ff0000;width:32px;height:32px;border-radius:8px;display:grid;place-items:center">▶️</div>YouTube</div>
+<div class="ditem"><div style="background:#25D366;width:32px;height:32px;border-radius:8px;display:grid;place-items:center">💬</div>WhatsApp</div>
+<div class="ditem"><div style="background:#fff;width:32px;height:32px;border-radius:8px;display:grid;place-items:center">▶️</div>Play</div>
+<div class="ditem"><div style="background:#fff;width:32px;height:32px;border-radius:8px;display:grid;place-items:center">🌐</div>Chrome</div>
+<div class="ditem"><div style="background:#8b5cf6;width:32px;height:32px;border-radius:8px;display:grid;place-items:center">🖼️</div>গ্যালারি</div>
+<div class="ditem"><div style="background:#fff;width:32px;height:32px;border-radius:8px;display:grid;place-items:center">📷</div>ক্যামেরা</div>
 </div>
-
-<script>
-const messages=document.getElementById("messages");
-const input=document.getElementById("userInput");
-const statusText=document.getElementById("status");
-
-function add(text,type){
-  const d=document.createElement("div");
-  d.className="message "+type;
-  d.textContent=text;
-  messages.appendChild(d);
-  messages.scrollTop=messages.scrollHeight;
-}
-
-function speak(text){
-  if(!("speechSynthesis" in window)){
-    statusText.textContent="কণ্ঠ সমর্থিত নয়";
-    return;
-  }
-  speechSynthesis.cancel();
-  const u=new SpeechSynthesisUtterance(text);
-  u.lang="bn-BD";
-  u.rate=0.9;
-  u.pitch=1.08;
-  const voices=speechSynthesis.getVoices();
-  const v=voices.find(x=>x.lang&&x.lang.toLowerCase().startsWith("bn"));
-  if(v)u.voice=v;
-  u.onstart=()=>statusText.textContent="● কথা বলছি...";
-  u.onend=()=>statusText.textContent="● প্রস্তুত আছি";
-  speechSynthesis.speak(u);
-}
-
-function openSite(name){
-  const sites={
-    youtube:"https://www.youtube.com/",
-    whatsapp:"https://www.whatsapp.com/",
-    google:"https://www.google.com/",
-    facebook:"https://www.facebook.com/"
-  };
-  if(sites[name])window.open(sites[name],"_blank");
-}
-
-function reply(text){
-  const q=text.toLowerCase();
-
-  if(/সালাম|আসসালামু/.test(q))
-    return "ওয়ালাইকুম আসসালাম! আপনাকে কীভাবে সাহায্য করব?";
-
-  if(/তোমার নাম|তুমি কে|কে তুমি/.test(q))
-    return "আমি MY AI PRO, আপনার বাংলা AI সহকারী।";
-
-  if(/হ্যালো|হাই/.test(q))
-    return "হ্যালো! 😊 বলুন, কী সাহায্য লাগবে?";
-
-  if(/সময়|কয়টা বাজে/.test(q))
-    return "এখন সময় "+new Date().toLocaleTimeString("bn-BD",{hour:"numeric",minute:"2-digit"});
-
-  if(/তারিখ/.test(q))
-    return "আজ "+new Date().toLocaleDateString("bn-BD",{year:"numeric",month:"long",day:"numeric"});
-
-  if(/ইউটিউব|youtube/.test(q)){
-    openSite("youtube");
-    return "YouTube খোলার চেষ্টা করছি।";
-  }
-
-  if(/হোয়াটসঅ্যাপ|whatsapp/.test(q)){
-    openSite("whatsapp");
-    return "WhatsApp খোলার চেষ্টা করছি।";
-  }
-
-  if(/ফেসবুক|facebook/.test(q)){
-    openSite("facebook");
-    return "Facebook খোলার চেষ্টা করছি।";
-  }
-
-  if(/গুগল|google/.test(q)){
-    openSite("google");
-    return "Google খোলার চেষ্টা করছি।";
-  }
-
-  if(/খবর|নিউজ|news/.test(q))
-    return "এই সংস্করণে সরাসরি নতুন খবর পড়ার ব্যবস্থা নেই। Google-এ খবর খুঁজে দেখতে পারেন।";
-
-  if(/ধন্যবাদ/.test(q))
-    return "আপনাকে স্বাগতম! 😊";
-
-  return "আপনি বলেছেন: "+text+
-    "\nএখনও আমার সাধারণ উত্তর দেওয়ার ক্ষমতা সীমিত। সব প্রশ্নের বুদ্ধিমান উত্তর দিতে নিরাপদ AI API সংযোগ করতে হবে।";
-}
-
-function send(){
-  const text=input.value.trim();
-  if(!text)return;
-  add(text,"user");
-  input.value="";
-  const answer=reply(text);
-  add(answer,"bot");
-  speak(answer);
-}
-
-input.addEventListener("keydown",e=>{
-  if(e.key==="Enter")send();
-});
-
-function listen(){
-  const Recognition=window.SpeechRecognition||window.webkitSpeechRecognition;
-  if(!Recognition){
-    add("আপনার ব্রাউজারে ভয়েস ইনপুট পাওয়া যাচ্ছে না। Chrome-এ চেষ্টা করুন।","bot");
-    return;
-  }
-  const r=new Recognition();
-  r.lang="bn-BD";
-  r.interimResults=false;
-  r.onstart=()=>statusText.textContent="● আপনার কথা শুনছি...";
-  r.onresult=e=>{
-    input.value=e.results[0][0].transcript;
-    send();
-  };
-  r.onerror=()=>statusText.textContent="মাইক্রোফোনে সমস্যা";
-  r.onend=()=>statusText.textContent="● প্রস্তুত আছি";
-  r.start();
-}
-</script>
+<div class="nav">
+<div class="nitem active"><span>🏠</span>হোম</div>
+<div class="nitem"><span>⊞</span>অ্যাপস</div>
+<div class="nitem"><span>🧠</span>AI</div>
+<div class="nitem"><span>🕒</span>ইতিহাস</div>
+<div class="nitem"><span>👤</span>প্রোফাইল</div>
+</div>
 </body>
 </html>
