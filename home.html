@@ -2,82 +2,58 @@
 <html lang="bn">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#090914">
-<title>MY AI PRO — Home</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#04100f">
+<title>Boss AI - হোম</title>
 <style>
-*{box-sizing:border-box}
-body{margin:0;background:#090914;color:white;font-family:Arial,sans-serif}
-.app{max-width:500px;min-height:100vh;margin:auto;padding:20px;background:radial-gradient(ellipse at top,#38205f,#090914 65%)}
-header{display:flex;justify-content:space-between;align-items:center}
-.logo{font-size:23px;font-weight:bold;color:#d8b5ff}
-.sub{color:#b9adcF;font-size:12px;margin-top:5px}
-.hero{text-align:center;padding:32px 0 20px}
-.avatar{width:145px;height:145px;margin:auto;border-radius:50%;display:grid;place-items:center;font-size:85px;background:linear-gradient(135deg,#ad6aff,#35205d);border:3px solid #d9baff;box-shadow:0 0 35px #944aff66}
-h1{font-size:25px;margin:20px 0 8px}
-p{color:#bdb4d2;line-height:1.7;font-size:14px}
-a{text-decoration:none;color:white}
-.main-btn{display:block;padding:16px;margin-top:22px;border-radius:15px;background:linear-gradient(100deg,#a54bff,#6844e8);font-weight:bold;font-size:16px}
-h2{font-size:18px;margin-top:25px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.card{padding:17px 13px;border-radius:15px;background:#19142a;border:1px solid #45335f}
-.icon{font-size:27px;display:block;margin-bottom:10px}
-.card small{display:block;color:#b8adc9;margin-top:7px;line-height:1.5}
-.note{margin-top:20px;padding:13px;background:#171126;border-radius:12px;color:#c4b7da;font-size:12px;line-height:1.7}
-nav{display:flex;justify-content:space-around;margin-top:25px;padding:15px 0;border-top:1px solid #38284e}
-nav a{font-size:12px;text-align:center;color:#c3b5d9}
-nav span{display:block;font-size:21px;margin-bottom:5px}
-nav .active{color:#d8aaff}
-</style>
-</head>
-<body>
-<div class="app">
-  <header>
-    <div>
-      <div class="logo">✦ MY AI PRO</div>
-      <div class="sub">আপনার ব্যক্তিগত AI সহকারী</div>
-    </div>
-    <a href="index.html" aria-label="AI Chat">⚙️</a>
-  </header>
+  :root{
+    --bg:#04100f; --teal:#19f0c8; --amber:#ffb23e;
+    --silver:#cfd8dc; --blue:#3aa0ff;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{
+    background:radial-gradient(120% 70% at 70% 35%, #0a2a27 0%, var(--bg) 60%);
+    color:#e8fffb; font-family:system-ui,-apple-system,"Noto Sans Bengali",sans-serif;
+    display:flex;flex-direction:column;overflow:hidden;
+    padding-top:env(safe-area-inset-top);
+  }
+  header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px}
+  .sq{width:44px;height:44px;border-radius:14px;border:1.5px solid var(--teal);
+      background:rgba(25,240,200,.12);display:grid;place-items:center;font-size:20px;
+      box-shadow:0 0 14px rgba(25,240,200,.35);cursor:pointer}
+  .round{border-radius:50%}
+  .brand{display:flex;align-items:center;gap:10px}
+  .logo{width:34px;height:34px;border-radius:50%;
+        background:conic-gradient(from 0deg,#19f0c8,#3aa0ff,#a35bff,#19f0c8);
+        display:grid;place-items:center;animation:spin 6s linear infinite}
+  .logo::after{content:"";width:22px;height:22px;border-radius:50%;background:var(--bg)}
+  .brand h1{font-size:19px;letter-spacing:2px;font-weight:800}
+  .brand small{display:block;font-size:10px;color:var(--teal);opacity:.8;letter-spacing:1px}
+  @keyframes spin{to{transform:rotate(360deg)}}
 
-  <section class="hero">
-    <div class="avatar">👩🏻</div>
-    <h1>হ্যালো! আমি আপনার AI</h1>
-    <p>আপনার কথা শুনতে ও কাজে সাহায্য করতে প্রস্তুত।</p>
-    <a class="main-btn" href="index.html">🎙️ কথা বলা শুরু করুন</a>
-  </section>
+  .stage{flex:1;position:relative;min-height:0}
+  .hero{position:absolute;right:-6%;top:50%;transform:translateY(-52%);
+        width:74%;aspect-ratio:1;max-height:100%;border-radius:24px;
+        box-shadow:-18px 0 50px rgba(255,50,80,.35),18px 0 50px rgba(50,150,255,.35)}
+  .hero .ring{position:absolute;inset:0;border-radius:24px;
+        background:conic-gradient(from 0deg,#ff3250,#3296ff,#ff3250);animation:spin 8s linear infinite}
+  .hero img{position:absolute;inset:4px;width:calc(100% - 8px);height:calc(100% - 8px);border-radius:20px;object-fit:cover}
+  .menu{position:absolute;left:14px;top:50%;transform:translateY(-55%);
+        display:flex;flex-direction:column;gap:16px;z-index:2}
+  .pill{display:flex;align-items:center;gap:10px;min-width:150px;padding:11px 16px 11px 12px;
+        border-radius:30px;border:2px solid var(--c);color:#fff;font-weight:800;font-size:14px;
+        letter-spacing:1px;background:rgba(0,0,0,.45);backdrop-filter:blur(6px);
+        box-shadow:0 0 14px color-mix(in srgb,var(--c) 45%,transparent),inset 0 0 10px color-mix(in srgb,var(--c) 18%,transparent);
+        cursor:pointer;transition:transform .15s}
+  .pill:active{transform:scale(.95)}
+  .pill i{font-style:normal;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;
+          background:color-mix(in srgb,var(--c) 30%,#000);font-size:14px}
 
-  <h2>দ্রুত কাজ করুন</h2>
-  <section class="grid">
-    <a class="card" href="index.html">
-      <span class="icon">💬</span><b>AI চ্যাট</b>
-      <small>প্রশ্ন করুন ও কথা বলুন</small>
-    </a>
-    <a class="card" href="https://www.youtube.com/">
-      <span class="icon">▶️</span><b>YouTube</b>
-      <small>ভিডিও দেখুন</small>
-    </a>
-    <a class="card" href="https://www.google.com/">
-      <span class="icon">🔎</span><b>Google</b>
-      <small>তথ্য খুঁজুন</small>
-    </a>
-    <a class="card" href="https://www.whatsapp.com/">
-      <span class="icon">💬</span><b>WhatsApp</b>
-      <small>মেসেজ পাঠান</small>
-    </a>
-  </section>
-
-  <div class="note">
-    💡 AI চ্যাটে গিয়ে মাইক্রোফোন চাপুন এবং বাংলায় কথা বলুন।
-    ওয়েবসাইটের লিংক খোলা যাবে; ইনস্টল করা সব অ্যাপ নিয়ন্ত্রণ করতে আলাদা Android সুবিধা দরকার।
-  </div>
-
-  <nav>
-    <a class="active" href="home.html"><span>⌂</span>হোম</a>
-    <a href="index.html"><span>💬</span>চ্যাট</a>
-    <a href="https://www.google.com/"><span>🌐</span>ওয়েব</a>
-    <a href="index.html"><span>⚙️</span>সেটিংস</a>
-  </nav>
-</div>
-</body>
-</html>
+  .info{display:flex;gap:12px;padding:0 14px 12px;align-items:stretch}
+  .brief{flex:1;font-size:12px;min-width:0}
+  .brief h3{font-size:11px;letter-spacing:1.5px;margin-bottom:8px;color:#fff}
+  .brief p{border-left:3px solid var(--blue);padding-left:8px;margin-bottom:6px;color:#d6f5ef;
+           white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .brief a{color:var(--teal);font-weight:700;font-size:11px}
+  .log{wi
