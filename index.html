@@ -80,7 +80,7 @@
 <body>
 
 <header>
-  <div class="sq round" onclick="location.href='index.html'">🕒</div>
+  <div class="sq round" onclick="location.href='chat.html'">🕒</div>
   <div class="brand">
     <div class="logo"></div>
     <div><h1>BOSS AI</h1><small>আপনার ব্যক্তিগত সহকারী</small></div>
@@ -117,15 +117,15 @@
 
 <nav>
   <a class="on" href="index.html"><span>🏠</span>হোম</a>
-  <a href="index.html"><span>💬</span>চ্যাট</a>
-  <a href="index.html#voice"><span>🎤</span>ভয়েস</a>
-  <a href="index.html#history"><span>🕒</span>ইতিহাস</a>
+  <a href="chat.html"><span>💬</span>চ্যাট</a>
+  <a href="chat.html#voice"><span>🎤</span>ভয়েস</a>
+  <a href="chat.html"><span>🕒</span>ইতিহাস</a>
   <a href="profile.html"><span>⚙️</span>সেটিংস</a>
 </nav>
 
 <script>
   function go(x){
-    const m={chat:'index.html',memory:'index.html#memory',soul:'profile.html',settings:'profile.html'};
+    const m={chat:'chat.html',memory:'chat.html',soul:'profile.html',settings:'chat.html'};
     location.href=m[x];
   }
   const msgs=['ভয়েস ইঞ্জিন প্রস্তুত','মেমোরি লোড হয়েছে','নেটওয়ার্ক সংযুক্ত','সবকিছু ঠিক আছে'];
