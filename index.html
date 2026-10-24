@@ -1,70 +1,135 @@
-
-<!doctype html>
+<!DOCTYPE html>
 <html lang="bn">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Boss AI</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#04100f">
 <link rel="manifest" href="manifest.json">
+<title>Boss AI - হোম</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:system-ui;background:#000;color:#fff;height:100vh;overflow:hidden;position:relative}
-.bg{position:absolute;inset:0;background:url('avatar.jpg') center/cover no-repeat}
-.ov{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.6),rgba(0,0,0,.3) 40%,rgba(0,0,0,.9))}
-.top{position:relative;z-index:2;display:flex;justify-content:space-between;padding:12px}
-.left{display:flex;gap:10px;align-items:center}
-.ava{width:46px;height:46px;border-radius:50%;border:2px solid #a855f7;object-fit:cover}
-.boss{font-weight:900;font-size:22px}.boss span{color:#38bdf8}
-.sub{font-size:11px;opacity:.8}
-.badge{background:#065f46;border:1px solid #10b981;color:#10b981;padding:2px 7px;border-radius:10px;font-size:9px;display:inline-block;margin-top:3px}
-.on{background:rgba(20,20,30,.8);border:1px solid #333;border-radius:20px;padding:5px 10px;display:flex;gap:5px;align-items:center;font-size:11px}
-.dot{width:7px;height:7px;background:#22c55e;border-radius:50%}
-.bubble{position:relative;z-index:2;margin:14px;background:rgba(15,30,60,.9);border:1px solid #3b82f6;border-radius:14px;padding:10px;max-width:68%;font-size:12px;line-height:1.5}
-.side{position:absolute;right:10px;top:130px;z-index:2;display:flex;flex-direction:column;gap:8px}
-.sbtn{display:flex;gap:7px;align-items:center;padding:9px 12px;border-radius:12px;border:1px solid;font-size:11px;font-weight:600;min-width:100px}
-.sbtn .ic{width:24px;height:24px;border-radius:50%;display:grid;place-items:center}
-.c1{background:rgba(124,58,237,.25);border-color:#7c3aed;color:#c4b5fd}.c1 .ic{background:#7c3aed}
-.c2{background:rgba(59,130,246,.25);border-color:#3b82f6;color:#93c5fd}.c2 .ic{background:#3b82f6}
-.c3{background:rgba(16,185,129,.25);border-color:#10b981;color:#6ee7b7}.c3 .ic{background:#10b981}
-.c4{background:rgba(249,115,22,.25);border-color:#f97316;color:#fed7aa}.c4 .ic{background:#f97316}
-.c5{background:rgba(236,72,153,.25);border-color:#ec4899;color:#fbcfe8}.c5 .ic{background:#ec4899}
-.mic{position:absolute;bottom:140px;left:50%;transform:translateX(-50%);z-index:2;text-align:center}
-.mbtn{width:80px;height:80px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#7c3aed,#1e3a8a);border:3px solid #8b5cf6;display:grid;place-items:center;font-size:34px}
-.dock{position:absolute;bottom:65px;left:10px;right:10px;z-index:2;background:rgba(10,15,30,.85);border:1px solid #1e293b;border-radius:16px;padding:10px 6px;display:flex;justify-content:space-around}
-.ditem{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:9px}
-.nav{position:absolute;bottom:0;left:0;right:0;z-index:2;background:rgba(0,0,0,.9);border-top:1px solid #1e293b;display:flex;justify-content:space-around;padding:6px 0}
-.nitem{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:9px;color:#64748b}.nitem.active{color:#38bdf8}
+  :root{
+    --bg:#04100f; --teal:#19f0c8; --amber:#ffb23e;
+    --silver:#cfd8dc; --blue:#3aa0ff;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{
+    background:radial-gradient(120% 70% at 70% 35%, #0a2a27 0%, var(--bg) 60%);
+    color:#e8fffb; font-family:system-ui,-apple-system,"Noto Sans Bengali",sans-serif;
+    display:flex;flex-direction:column;overflow:hidden;
+    padding-top:env(safe-area-inset-top);
+  }
+  header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px}
+  .sq{width:44px;height:44px;border-radius:14px;border:1.5px solid var(--teal);
+      background:rgba(25,240,200,.12);display:grid;place-items:center;font-size:20px;
+      box-shadow:0 0 14px rgba(25,240,200,.35);cursor:pointer}
+  .round{border-radius:50%}
+  .brand{display:flex;align-items:center;gap:10px}
+  .logo{width:34px;height:34px;border-radius:50%;
+        background:conic-gradient(from 0deg,#19f0c8,#3aa0ff,#a35bff,#19f0c8);
+        display:grid;place-items:center;animation:spin 6s linear infinite}
+  .logo::after{content:"";width:22px;height:22px;border-radius:50%;background:var(--bg)}
+  .brand h1{font-size:19px;letter-spacing:2px;font-weight:800}
+  .brand small{display:block;font-size:10px;color:var(--teal);opacity:.8;letter-spacing:1px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  .stage{flex:1;position:relative;min-height:0}
+  .hero{position:absolute;right:-6%;top:50%;transform:translateY(-52%);
+        width:74%;aspect-ratio:1;max-height:100%;border-radius:24px;
+        box-shadow:-18px 0 50px rgba(255,50,80,.35),18px 0 50px rgba(50,150,255,.35)}
+  .hero .ring{position:absolute;inset:0;border-radius:24px;
+        background:conic-gradient(from 0deg,#ff3250,#3296ff,#ff3250);animation:spin 8s linear infinite}
+  .hero img{position:absolute;inset:4px;width:calc(100% - 8px);height:calc(100% - 8px);border-radius:20px;object-fit:cover}
+  .menu{position:absolute;left:14px;top:50%;transform:translateY(-55%);
+        display:flex;flex-direction:column;gap:16px;z-index:2}
+  .pill{display:flex;align-items:center;gap:10px;min-width:150px;padding:11px 16px 11px 12px;
+        border-radius:30px;border:2px solid var(--c);color:#fff;font-weight:800;font-size:14px;
+        letter-spacing:1px;background:rgba(0,0,0,.45);backdrop-filter:blur(6px);
+        box-shadow:0 0 14px color-mix(in srgb,var(--c) 45%,transparent),inset 0 0 10px color-mix(in srgb,var(--c) 18%,transparent);
+        cursor:pointer;transition:transform .15s}
+  .pill:active{transform:scale(.95)}
+  .pill i{font-style:normal;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;
+          background:color-mix(in srgb,var(--c) 30%,#000);font-size:14px}
+
+  .info{display:flex;gap:12px;padding:0 14px 12px;align-items:stretch}
+  .brief{flex:1;font-size:12px;min-width:0}
+  .brief h3{font-size:11px;letter-spacing:1.5px;margin-bottom:8px;color:#fff}
+  .brief p{border-left:3px solid var(--blue);padding-left:8px;margin-bottom:6px;color:#d6f5ef;
+           white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .brief a{color:var(--teal);font-weight:700;font-size:11px}
+  .log{width:46%;border:1.5px solid rgba(25,240,200,.5);border-radius:16px;padding:10px 12px;
+       background:rgba(25,240,200,.07);box-shadow:0 0 14px rgba(25,240,200,.2)}
+  .log .top{display:flex;justify-content:space-between;font-size:11px;font-weight:800;letter-spacing:1px}
+  .log .top span{color:var(--teal)}
+  .bar{height:5px;border-radius:5px;background:rgba(255,255,255,.12);margin:8px 0;overflow:hidden}
+  .bar b{display:block;height:100%;width:30%;background:var(--teal);border-radius:5px;animation:load 3s ease-in-out infinite}
+  @keyframes load{0%{width:15%}50%{width:90%}100%{width:15%}}
+  .log p{font-size:11px;color:#d6f5ef}
+  .log p::before{content:"● ";color:var(--teal)}
+
+  nav{display:flex;justify-content:space-around;margin:0 12px calc(10px + env(safe-area-inset-bottom));
+      padding:10px 6px;border-radius:26px;background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.08);backdrop-filter:blur(10px)}
+  nav a{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;color:#9fb8b3;
+        text-decoration:none;font-weight:600}
+  nav a span{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-size:19px}
+  nav a.on{color:#fff}
+  nav a.on span{background:var(--teal);box-shadow:0 0 16px var(--teal)}
 </style>
 </head>
 <body>
-<div class="bg"></div><div class="ov"></div>
-<div class="top">
-<div class="left"><img src="avatar.jpg" class="ava"><div><div class="boss">Boss <span>AI</span></div><div class="sub">আপনার ব্যক্তিগত AI সহকারী</div><div class="badge">🤖 Android Assistant</div></div></div>
-<div style="display:flex;gap:6px"><div class="on"><span class="dot"></span> আমি অনলাইন</div><div style="width:32px;height:32px;background:rgba(20,20,30,.8);border:1px solid #333;border-radius:50%;display:grid;place-items:center">⚙️</div></div>
+
+<header>
+  <div class="sq round" onclick="location.href='index.html'">🕒</div>
+  <div class="brand">
+    <div class="logo"></div>
+    <div><h1>BOSS AI</h1><small>আপনার ব্যক্তিগত সহকারী</small></div>
+  </div>
+  <div class="sq" onclick="location.href='profile.html'">🧠</div>
+</header>
+
+<div class="stage">
+  <div class="menu">
+    <div class="pill" style="--c:#3aa0ff" onclick="go('memory')"><i>◎</i>মেমোরি</div>
+    <div class="pill" style="--c:#ffb23e" onclick="go('chat')"><i>💬</i>চ্যাট</div>
+    <div class="pill" style="--c:#cfd8dc" onclick="go('soul')"><i>☺</i>সোল</div>
+    <div class="pill" style="--c:#19f0c8" onclick="go('settings')"><i>⚙</i>সেটিংস</div>
+  </div>
+  <div class="hero">
+    <div class="ring"></div>
+    <img src="avatar.jpg" alt="Boss AI">
+  </div>
 </div>
-<div class="bubble">🔊 হ্যালো! আমি BOSS AI<br>আপনার ব্যক্তিগত সহকারী।<br>বলুন, আমি কী করতে পারি?</div>
-<div class="side">
-<div class="sbtn c1"><span class="ic">💬</span> চ্যাট</div>
-<div class="sbtn c2"><span class="ic">🎤</span> ভয়েস কমান্ড</div>
-<div class="sbtn c3"><span class="ic">⊞</span> অ্যাপ খুলুন</div>
-<div class="sbtn c4"><span class="ic">⚙️</span> সেটিংস</div>
-<div class="sbtn c5"><span class="ic">⭐</span> প্রিমিয়াম</div>
+
+<div class="info">
+  <div class="brief">
+    <h3>ইন্টেলিজেন্স ব্রিফ</h3>
+    <p>আজকের সারাংশ এখানে দেখা যাবে</p>
+    <p>নতুন খবর ও রিমাইন্ডার</p>
+    <a href="#">+৭ আরও</a>
+  </div>
+  <div class="log">
+    <div class="top">সিস্টেম লগ <span>চলছে</span></div>
+    <div class="bar"><b></b></div>
+    <p id="logtxt">ভয়েস ইঞ্জিন প্রস্তুত</p>
+  </div>
 </div>
-<div class="mic"><div class="mbtn">🎤</div><div style="font-size:12px;margin-top:8px;opacity:.7">বলে দেখুন...</div></div>
-<div class="dock">
-<div class="ditem"><div style="background:#ff0000;width:32px;height:32px;border-radius:8px;display:grid;place-items:center">▶️</div>YouTube</div>
-<div class="ditem"><div style="background:#25D366;width:32px;height:32px;border-radius:8px;display:grid;place-items:center">💬</div>WhatsApp</div>
-<div class="ditem"><div style="background:#fff;width:32px;height:32px;border-radius:8px;display:grid;place-items:center">▶️</div>Play</div>
-<div class="ditem"><div style="background:#fff;width:32px;height:32px;border-radius:8px;display:grid;place-items:center">🌐</div>Chrome</div>
-<div class="ditem"><div style="background:#8b5cf6;width:32px;height:32px;border-radius:8px;display:grid;place-items:center">🖼️</div>গ্যালারি</div>
-<div class="ditem"><div style="background:#fff;width:32px;height:32px;border-radius:8px;display:grid;place-items:center">📷</div>ক্যামেরা</div>
-</div>
-<div class="nav">
-<div class="nitem active"><span>🏠</span>হোম</div>
-<div class="nitem"><span>⊞</span>অ্যাপস</div>
-<div class="nitem"><span>🧠</span>AI</div>
-<div class="nitem"><span>🕒</span>ইতিহাস</div>
-<div class="nitem"><span>👤</span>প্রোফাইল</div>
-</div>
+
+<nav>
+  <a class="on" href="index.html"><span>🏠</span>হোম</a>
+  <a href="index.html"><span>💬</span>চ্যাট</a>
+  <a href="index.html#voice"><span>🎤</span>ভয়েস</a>
+  <a href="index.html#history"><span>🕒</span>ইতিহাস</a>
+  <a href="profile.html"><span>⚙️</span>সেটিংস</a>
+</nav>
+
+<script>
+  function go(x){
+    const m={chat:'index.html',memory:'index.html#memory',soul:'profile.html',settings:'profile.html'};
+    location.href=m[x];
+  }
+  const msgs=['ভয়েস ইঞ্জিন প্রস্তুত','মেমোরি লোড হয়েছে','নেটওয়ার্ক সংযুক্ত','সবকিছু ঠিক আছে'];
+  let k=0;setInterval(()=>{k=(k+1)%msgs.length;document.getElementById('logtxt').textContent=msgs[k]},2800);
+</script>
 </body>
 </html>
