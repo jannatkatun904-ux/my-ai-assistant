@@ -59,7 +59,7 @@
 <script src="voice.js"></script>
 <script>
   // ====== সেটিংস ======
-  const MODEL = 'gemini-2.5-flash-lite';
+  const MODEL = 'gemini-3.5-flash-lite';
   const SYSTEM = 'তুমি BOSS AI, ব্যবহারকারীর ব্যক্তিগত বাংলা সহকারী। ব্যবহারকারী যে ভাষায় লেখে সেই ভাষায় উত্তর দাও, ডিফল্ট বাংলা। উত্তর ছোট, বন্ধুত্বপূর্ণ ও পরিষ্কার রাখো।';
 
   const $ = id => document.getElementById(id);
@@ -116,7 +116,7 @@
         headers:{'content-type':'application/json','x-goog-api-key':key},
         body:JSON.stringify({
           system_instruction:{parts:[{text:SYSTEM}]},
-          generationConfig:{ maxOutputTokens:500, thinkingConfig:{ thinkingBudget:0 } },
+          generationConfig:{ maxOutputTokens:500 },
           contents:hist.slice(-12).map(m => ({role:m.role==='user'?'user':'model', parts:[{text:m.content}]}))
         })
       });
@@ -129,60 +129,3 @@
       while (true){
         const {done, value} = await reader.read(); if (done) break;
         buf += dec.decode(value, {stream:true});
-        const lines = buf.split('\n'); buf = lines.pop();
-        for (const ln of lines){
-          if (!ln.startsWith('data:')) continue;
-          const s = ln.slice(5).trim(); if (!s) continue;
-          try{
-            const j = JSON.parse(s);
-            const parts = (j.candidates && j.candidates[0] && j.candidates[0].content && j.candidates[0].content.parts) || [];
-            const tx = parts.map(c => c.text || '').join('');
-            if (tx){
-              out += tx;
-              if (!bubble){ wait.remove(); bubble = add('a', ''); $('st').textContent='লিখছি...'; }
-              bubble.textContent = out; box.scrollTop = box.scrollHeight;
-            }
-          }catch(e){}
-        }
-      }
-      out = out.trim();
-      if (!out){ wait.remove(); out = '(খালি উত্তর)'; add('a', out); }
-      hist.push({role:'assistant', content:out}); save(); say(out);
-    }catch(err){
-      wait.remove(); if (bubble) bubble.remove(); hist.pop();
-      add('e', 'সমস্যা: ' + err.message + (/key|auth|permission/i.test(err.message) ? ' — 🔑 চেপে সঠিক কী দিন।' : ''));
-    }
-    $('st').textContent='অনলাইন';
-  }
-
-  // ====== ইভেন্ট ======
-  $('f').addEventListener('submit', e => { e.preventDefault(); send(ta.value); });
-  ta.addEventListener('keydown', e => { if (e.key==='Enter' && !e.shiftKey){ e.preventDefault(); send(ta.value); }});
-  ta.addEventListener('input', () => { ta.style.height='auto'; ta.style.height=Math.min(ta.scrollHeight,120)+'px'; });
-  $('cfg').onclick = () => getKey(true);
-  $('clr').onclick = () => { if (confirm('চ্যাট মুছে নতুন শুরু করবেন?')){ hist=[]; save(); render(); } };
-  $('spk').onclick = () => {
-    speak = !speak; localStorage.setItem('boss_speak', speak?'1':'0');
-    $('spk').classList.toggle('on', speak); if(!speak && window.speechSynthesis) speechSynthesis.cancel();
-  };
-
-  // ====== ভয়েস ইনপুট ======
-  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  let rec = null, listening = false;
-  function mic(){
-    if (!SR){ add('e','এই ব্রাউজারে ভয়েস ইনপুট নেই। Chrome ব্যবহার করুন।'); return; }
-    if (listening){ rec.stop(); return; }
-    rec = new SR(); rec.lang='bn-BD'; rec.interimResults=false;
-    rec.onstart = () => { listening=true; $('mic').classList.add('on'); $('st').textContent='শুনছি...'; };
-    rec.onend = () => { listening=false; $('mic').classList.remove('on'); $('st').textContent='অনলাইন'; };
-    rec.onerror = ev => add('e','মাইক সমস্যা: ' + ev.error);
-    rec.onresult = ev => { const s = ev.results[0][0].transcript; speak = true; $('spk').classList.add('on'); send(s); };
-    rec.start();
-  }
-  $('mic').onclick = mic;
-
-  render();
-  if (location.hash === '#voice') setTimeout(mic, 400);
-</script>
-</body>
-</html>
