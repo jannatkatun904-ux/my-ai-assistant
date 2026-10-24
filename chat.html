@@ -58,7 +58,7 @@
 
 <script>
   // ====== সেটিংস ======
-  const MODEL = 'claude-haiku-5-5';   // ভালো মানের জন্য 'claude-sonnet-5-5' দিন
+  const MODEL = 'gemini-flash-latest';
   const SYSTEM = 'তুমি BOSS AI, ব্যবহারকারীর ব্যক্তিগত বাংলা সহকারী। ব্যবহারকারী যে ভাষায় লেখে সেই ভাষায় উত্তর দাও, ডিফল্ট বাংলা। উত্তর ছোট, বন্ধুত্বপূর্ণ ও পরিষ্কার রাখো।';
 
   const $ = id => document.getElementById(id);
@@ -69,10 +69,10 @@
   $('spk').classList.toggle('on', speak);
 
   function getKey(force){
-    let k = localStorage.getItem('boss_key') || '';
+    let k = localStorage.getItem('boss_gkey') || '';
     if (!k || force){
-      k = (prompt('আপনার Claude API Key দিন (sk-ant-... দিয়ে শুরু)। এটা শুধু এই ফোনেই থাকবে:', k) || '').trim();
-      if (k) localStorage.setItem('boss_key', k);
+      k = (prompt('আপনার Gemini API Key দিন। এটা শুধু এই ফোনেই থাকবে:', k) || '').trim();
+      if (k) localStorage.setItem('boss_gkey', k);
     }
     return k;
   }
@@ -98,25 +98,24 @@
 
   async function send(text){
     text = text.trim(); if (!text) return;
-    const key = getKey(); if (!key){ add('e','API Key ছাড়া চ্যাট চলবে না। 🔑 চেপে কী দিন।'); return; }
+    const key = getKey(); if (!key){ add('e','Gemini API Key ছাড়া চ্যাট চলবে না। 🔑 চেপে কী দিন।'); return; }
     add('u', text); hist.push({role:'user', content:text}); ta.value=''; ta.style.height='auto';
     const wait = document.createElement('div');
     wait.className='m a dots'; wait.innerHTML='<span></span><span></span><span></span>';
     box.appendChild(wait); box.scrollTop = box.scrollHeight; $('st').textContent='ভাবছি...';
     try{
-      const r = await fetch('https://api.anthropic.com/v1/messages',{
+      const r = await fetch('https://generativelanguage.googleapis.com/v1beta/models/' + MODEL + ':generateContent',{
         method:'POST',
-        headers:{
-          'content-type':'application/json',
-          'x-api-key':key,
-          'anthropic-version':'2023-06-01',
-          'anthropic-dangerous-direct-browser-access':'true'
-        },
-        body:JSON.stringify({model:MODEL,max_tokens:1024,system:SYSTEM,messages:hist.slice(-20)})
+        headers:{'content-type':'application/json','x-goog-api-key':key},
+        body:JSON.stringify({
+          system_instruction:{parts:[{text:SYSTEM}]},
+          contents:hist.slice(-20).map(m => ({role:m.role==='user'?'user':'model', parts:[{text:m.content}]}))
+        })
       });
       const j = await r.json();
       if (!r.ok) throw new Error((j.error && j.error.message) || ('ত্রুটি ' + r.status));
-      const out = (j.content || []).map(c => c.text || '').join('').trim() || '(খালি উত্তর)';
+      const parts = (j.candidates && j.candidates[0] && j.candidates[0].content && j.candidates[0].content.parts) || [];
+      const out = parts.map(c => c.text || '').join('').trim() || '(খালি উত্তর)';
       wait.remove(); add('a', out); hist.push({role:'assistant', content:out}); save(); say(out);
     }catch(err){
       wait.remove(); hist.pop();
