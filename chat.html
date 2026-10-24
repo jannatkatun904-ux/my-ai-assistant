@@ -56,9 +56,10 @@
   <button class="btn send" type="submit">➤</button>
 </form>
 
+<script src="voice.js"></script>
 <script>
   // ====== সেটিংস ======
-  const MODEL = 'gemini-flash-latest';
+  const MODEL = 'gemini-2.5-flash-lite';
   const SYSTEM = 'তুমি BOSS AI, ব্যবহারকারীর ব্যক্তিগত বাংলা সহকারী। ব্যবহারকারী যে ভাষায় লেখে সেই ভাষায় উত্তর দাও, ডিফল্ট বাংলা। উত্তর ছোট, বন্ধুত্বপূর্ণ ও পরিষ্কার রাখো।';
 
   const $ = id => document.getElementById(id);
@@ -90,10 +91,13 @@
     hist.forEach(m => add(m.role === 'user' ? 'u' : 'a', m.content));
   }
 
+  // voice.js থাকলে সুন্দর মেয়েলি কণ্ঠ, না থাকলে ফোনের সাধারণ ভয়েস
   function say(text){
-    if (!speak || !('speechSynthesis' in window)) return;
+    if (!speak) return;
+    if (typeof bossSpeak === 'function'){ bossSpeak(text); return; }
+    if (!('speechSynthesis' in window)) return;
     speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(text); u.lang = 'bn-BD';
+    const u = new SpeechSynthesisUtterance(text); u.lang = 'bn-BD'; u.pitch = 1.25;
     speechSynthesis.speak(u);
   }
 
@@ -105,22 +109,47 @@
     const wait = document.createElement('div');
     wait.className='m a dots'; wait.innerHTML='<span></span><span></span><span></span>';
     box.appendChild(wait); box.scrollTop = box.scrollHeight; $('st').textContent='ভাবছি...';
+    let bubble = null, out = '';
     try{
-      const r = await fetch('https://generativelanguage.googleapis.com/v1beta/models/' + MODEL + ':generateContent',{
+      const r = await fetch('https://generativelanguage.googleapis.com/v1beta/models/' + MODEL + ':streamGenerateContent?alt=sse',{
         method:'POST',
         headers:{'content-type':'application/json','x-goog-api-key':key},
         body:JSON.stringify({
           system_instruction:{parts:[{text:SYSTEM}]},
-          contents:hist.slice(-20).map(m => ({role:m.role==='user'?'user':'model', parts:[{text:m.content}]}))
+          generationConfig:{ maxOutputTokens:500, thinkingConfig:{ thinkingBudget:0 } },
+          contents:hist.slice(-12).map(m => ({role:m.role==='user'?'user':'model', parts:[{text:m.content}]}))
         })
       });
-      const j = await r.json();
-      if (!r.ok) throw new Error((j.error && j.error.message) || ('ত্রুটি ' + r.status));
-      const parts = (j.candidates && j.candidates[0] && j.candidates[0].content && j.candidates[0].content.parts) || [];
-      const out = parts.map(c => c.text || '').join('').trim() || '(খালি উত্তর)';
-      wait.remove(); add('a', out); hist.push({role:'assistant', content:out}); save(); say(out);
+      if (!r.ok){
+        const j = await r.json().catch(() => ({}));
+        throw new Error((j.error && j.error.message) || ('ত্রুটি ' + r.status));
+      }
+      const reader = r.body.getReader(), dec = new TextDecoder();
+      let buf = '';
+      while (true){
+        const {done, value} = await reader.read(); if (done) break;
+        buf += dec.decode(value, {stream:true});
+        const lines = buf.split('\n'); buf = lines.pop();
+        for (const ln of lines){
+          if (!ln.startsWith('data:')) continue;
+          const s = ln.slice(5).trim(); if (!s) continue;
+          try{
+            const j = JSON.parse(s);
+            const parts = (j.candidates && j.candidates[0] && j.candidates[0].content && j.candidates[0].content.parts) || [];
+            const tx = parts.map(c => c.text || '').join('');
+            if (tx){
+              out += tx;
+              if (!bubble){ wait.remove(); bubble = add('a', ''); $('st').textContent='লিখছি...'; }
+              bubble.textContent = out; box.scrollTop = box.scrollHeight;
+            }
+          }catch(e){}
+        }
+      }
+      out = out.trim();
+      if (!out){ wait.remove(); out = '(খালি উত্তর)'; add('a', out); }
+      hist.push({role:'assistant', content:out}); save(); say(out);
     }catch(err){
-      wait.remove(); hist.pop();
+      wait.remove(); if (bubble) bubble.remove(); hist.pop();
       add('e', 'সমস্যা: ' + err.message + (/key|auth|permission/i.test(err.message) ? ' — 🔑 চেপে সঠিক কী দিন।' : ''));
     }
     $('st').textContent='অনলাইন';
