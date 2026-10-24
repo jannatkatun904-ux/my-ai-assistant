@@ -68,10 +68,12 @@
   let speak = localStorage.getItem('boss_speak') === '1';
   $('spk').classList.toggle('on', speak);
 
+  const clean = s => (s || '').replace(/[^\x21-\x7E]/g, '');
+
   function getKey(force){
-    let k = localStorage.getItem('boss_gkey') || '';
+    let k = clean(localStorage.getItem('boss_gkey'));
     if (!k || force){
-      k = (prompt('আপনার Gemini API Key দিন। এটা শুধু এই ফোনেই থাকবে:', k) || '').trim();
+      k = clean(prompt('আপনার Gemini API Key দিন (শুধু কীটা, আর কিছু না)। এটা শুধু এই ফোনেই থাকবে:', k));
       if (k) localStorage.setItem('boss_gkey', k);
     }
     return k;
