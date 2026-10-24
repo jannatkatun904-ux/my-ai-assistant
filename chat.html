@@ -44,7 +44,7 @@
   <img class="ava" src="avatar.jpg" alt="">
   <div class="title"><b>BOSS AI</b><small id="st">অনলাইন</small></div>
   <div class="btn" id="spk" title="উত্তর শোনা">🔊</div>
-  <div class="btn" id="cfg" title="সেটিংস">🔑</div>
+  <div class="btn" id="cfg" title="কী বদলান">🔑</div>
   <div class="btn" id="clr" title="নতুন চ্যাট">🗑</div>
 </header>
 
@@ -63,18 +63,17 @@
 
   const $ = id => document.getElementById(id);
   const box = $('msgs'), ta = $('t');
+  const clean = s => (s || '').replace(/[^\x21-\x7E]/g, '');
   let hist = [];
   try { hist = JSON.parse(localStorage.getItem('boss_hist') || '[]'); } catch(e){}
   let speak = localStorage.getItem('boss_speak') === '1';
   $('spk').classList.toggle('on', speak);
 
-  const clean = s => (s || '').replace(/[^\x21-\x7E]/g, '');
-
   function getKey(force){
-    let k = clean(localStorage.getItem('boss_gkey'));
+    let k = clean(localStorage.getItem('boss_gkey2'));
     if (!k || force){
-      k = clean(prompt('আপনার Gemini API Key দিন (শুধু কীটা, আর কিছু না)। এটা শুধু এই ফোনেই থাকবে:', k));
-      if (k) localStorage.setItem('boss_gkey', k);
+      k = clean(prompt('আপনার Gemini API Key দিন (শুধু কীটা, আর কিছু না)। এটা শুধু এই ফোনেই থাকবে:', ''));
+      if (k) localStorage.setItem('boss_gkey2', k);
     }
     return k;
   }
@@ -100,7 +99,8 @@
 
   async function send(text){
     text = text.trim(); if (!text) return;
-    const key = getKey(); if (!key){ add('e','Gemini API Key ছাড়া চ্যাট চলবে না। 🔑 চেপে কী দিন।'); return; }
+    const key = getKey();
+    if (!key){ add('e','Gemini API Key ছাড়া চ্যাট চলবে না। 🔑 চেপে কী দিন।'); return; }
     add('u', text); hist.push({role:'user', content:text}); ta.value=''; ta.style.height='auto';
     const wait = document.createElement('div');
     wait.className='m a dots'; wait.innerHTML='<span></span><span></span><span></span>';
@@ -121,7 +121,7 @@
       wait.remove(); add('a', out); hist.push({role:'assistant', content:out}); save(); say(out);
     }catch(err){
       wait.remove(); hist.pop();
-      add('e', 'সমস্যা: ' + err.message + (/key|auth/i.test(err.message) ? ' — 🔑 চেপে সঠিক কী দিন।' : ''));
+      add('e', 'সমস্যা: ' + err.message + (/key|auth|permission/i.test(err.message) ? ' — 🔑 চেপে সঠিক কী দিন।' : ''));
     }
     $('st').textContent='অনলাইন';
   }
