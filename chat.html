@@ -35,6 +35,19 @@
   textarea{flex:1;resize:none;max-height:120px;border-radius:20px;border:1.5px solid rgba(25,240,200,.4);
            background:rgba(255,255,255,.06);color:#fff;padding:11px 15px;font:inherit;font-size:15px;outline:none}
   .send{background:var(--teal);color:#04100f;border-color:var(--teal)}
+  /* সেটিংস বক্স */
+  #ov{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;padding:16px;z-index:10}
+  #ov.show{display:flex}
+  .box{width:100%;max-width:520px;max-height:92%;overflow-y:auto;background:#0a1f1d;border:1.5px solid var(--teal);
+       border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:8px}
+  .box h3{font-size:16px}
+  .box label{font-size:13px;color:var(--teal)}
+  .box textarea,.box input{width:100%;max-height:none;border-radius:12px;padding:10px 12px;font-size:14px;
+       border:1.5px solid rgba(25,240,200,.4);background:rgba(255,255,255,.06);color:#fff;font-family:inherit;outline:none}
+  .box textarea{min-height:170px;resize:vertical}
+  .row{display:flex;gap:8px;margin-top:4px}
+  .row button{flex:1;padding:11px;border-radius:12px;border:1.5px solid var(--teal);background:transparent;color:#fff;font:inherit;font-size:14px}
+  .row .pri{background:var(--teal);color:#04100f;font-weight:700}
 </style>
 </head>
 <body>
@@ -44,7 +57,7 @@
   <img class="ava" src="avatar.jpg" alt="">
   <div class="title"><b>BOSS AI</b><small id="st">অনলাইন</small></div>
   <div class="btn" id="spk" title="উত্তর শোনা">🔊</div>
-  <div class="btn" id="cfg" title="কী বদলান">🔑</div>
+  <div class="btn" id="cfg" title="সেটিংস">⚙️</div>
   <div class="btn" id="clr" title="নতুন চ্যাট">🗑</div>
 </header>
 
@@ -56,11 +69,27 @@
   <button class="btn send" type="submit">➤</button>
 </form>
 
+<div id="ov">
+  <div class="box">
+    <h3>⚙️ সেটিংস</h3>
+    <label>আমার নির্দেশনা (AI এই নিয়মেই কাজ করবে)</label>
+    <textarea id="sysbox"></textarea>
+    <label>Groq API Key (শুধু এই ফোনেই থাকবে)</label>
+    <input id="keybox" type="password" placeholder="gsk_..." autocomplete="off">
+    <div class="row">
+      <button id="reset" type="button">ডিফল্ট</button>
+      <button id="cancel" type="button">বাতিল</button>
+      <button id="ok" type="button" class="pri">সেভ</button>
+    </div>
+  </div>
+</div>
+
 <script src="voice.js"></script>
 <script>
   // ====== সেটিংস ======
-  const MODEL = 'gemini-3.5-flash-lite';
-  const SYSTEM = 'তুমি BOSS AI, ব্যবহারকারীর ব্যক্তিগত বাংলা সহকারী। ব্যবহারকারী যে ভাষায় লেখে সেই ভাষায় উত্তর দাও, ডিফল্ট বাংলা। উত্তর ছোট, বন্ধুত্বপূর্ণ ও পরিষ্কার রাখো।';
+  const MODEL = 'llama-3.3-70b-versatile';
+  const API = 'https://api.groq.com/openai/v1/chat/completions';
+  const DEFAULT_SYSTEM = 'তুমি BOSS AI, ব্যবহারকারীর ব্যক্তিগত বাংলা সহকারী। ব্যবহারকারী যে ভাষায় লেখে সেই ভাষায় উত্তর দাও, ডিফল্ট বাংলা। উত্তর ছোট, বন্ধুত্বপূর্ণ ও পরিষ্কার রাখো।';
 
   const $ = id => document.getElementById(id);
   const box = $('msgs'), ta = $('t');
@@ -70,14 +99,25 @@
   let speak = localStorage.getItem('boss_speak') === '1';
   $('spk').classList.toggle('on', speak);
 
-  function getKey(force){
-    let k = clean(localStorage.getItem('boss_gkey2'));
-    if (!k || force){
-      k = clean(prompt('আপনার Gemini API Key দিন (শুধু কীটা, আর কিছু না)। এটা শুধু এই ফোনেই থাকবে:', ''));
-      if (k) localStorage.setItem('boss_gkey2', k);
-    }
-    return k;
+  const getSys = () => localStorage.getItem('boss_sys') || DEFAULT_SYSTEM;
+  const getKey = () => clean(localStorage.getItem('boss_groqkey'));
+
+  function openCfg(){
+    $('sysbox').value = getSys();
+    $('keybox').value = getKey();
+    $('ov').classList.add('show');
   }
+  function closeCfg(){ $('ov').classList.remove('show'); }
+  $('cfg').onclick = openCfg;
+  $('cancel').onclick = closeCfg;
+  $('reset').onclick = () => { $('sysbox').value = DEFAULT_SYSTEM; };
+  $('ok').onclick = () => {
+    const s = $('sysbox').value.trim();
+    localStorage.setItem('boss_sys', s || DEFAULT_SYSTEM);
+    const k = clean($('keybox').value);
+    if (k) localStorage.setItem('boss_groqkey', k);
+    closeCfg();
+  };
 
   function add(cls, text){
     const d = document.createElement('div');
@@ -91,7 +131,6 @@
     hist.forEach(m => add(m.role === 'user' ? 'u' : 'a', m.content));
   }
 
-  // voice.js থাকলে সুন্দর মেয়েলি কণ্ঠ, না থাকলে ফোনের সাধারণ ভয়েস
   function say(text){
     if (!speak) return;
     if (typeof bossSpeak === 'function'){ bossSpeak(text); return; }
@@ -104,20 +143,19 @@
   async function send(text){
     text = text.trim(); if (!text) return;
     const key = getKey();
-    if (!key){ add('e','Gemini API Key ছাড়া চ্যাট চলবে না। 🔑 চেপে কী দিন।'); return; }
+    if (!key){ add('e','Groq API Key নেই। ⚙️ চেপে কী দিন।'); openCfg(); return; }
     add('u', text); hist.push({role:'user', content:text}); ta.value=''; ta.style.height='auto';
     const wait = document.createElement('div');
     wait.className='m a dots'; wait.innerHTML='<span></span><span></span><span></span>';
     box.appendChild(wait); box.scrollTop = box.scrollHeight; $('st').textContent='ভাবছি...';
     let bubble = null, out = '';
     try{
-      const r = await fetch('https://generativelanguage.googleapis.com/v1beta/models/' + MODEL + ':streamGenerateContent?alt=sse',{
+      const r = await fetch(API,{
         method:'POST',
-        headers:{'content-type':'application/json','x-goog-api-key':key},
+        headers:{'content-type':'application/json','authorization':'Bearer ' + key},
         body:JSON.stringify({
-          system_instruction:{parts:[{text:SYSTEM}]},
-          generationConfig:{ maxOutputTokens:500 },
-          contents:hist.slice(-12).map(m => ({role:m.role==='user'?'user':'model', parts:[{text:m.content}]}))
+          model:MODEL, stream:true, max_tokens:800, temperature:0.7,
+          messages:[{role:'system', content:getSys()}].concat(hist.slice(-12))
         })
       });
       if (!r.ok){
@@ -129,3 +167,58 @@
       while (true){
         const {done, value} = await reader.read(); if (done) break;
         buf += dec.decode(value, {stream:true});
+        const lines = buf.split('\n'); buf = lines.pop();
+        for (const ln of lines){
+          if (!ln.startsWith('data:')) continue;
+          const s = ln.slice(5).trim(); if (!s || s === '[DONE]') continue;
+          try{
+            const j = JSON.parse(s);
+            const tx = (j.choices && j.choices[0] && j.choices[0].delta && j.choices[0].delta.content) || '';
+            if (tx){
+              out += tx;
+              if (!bubble){ wait.remove(); bubble = add('a', ''); $('st').textContent='লিখছি...'; }
+              bubble.textContent = out; box.scrollTop = box.scrollHeight;
+            }
+          }catch(e){}
+        }
+      }
+      out = out.trim();
+      if (!out){ wait.remove(); out = '(খালি উত্তর)'; add('a', out); }
+      hist.push({role:'assistant', content:out}); save(); say(out);
+    }catch(err){
+      wait.remove(); if (bubble) bubble.remove(); hist.pop();
+      add('e', 'সমস্যা: ' + err.message + (/key|auth|invalid/i.test(err.message) ? ' — ⚙️ চেপে সঠিক কী দিন।' : ''));
+    }
+    $('st').textContent='অনলাইন';
+  }
+
+  // ====== ইভেন্ট ======
+  $('f').addEventListener('submit', e => { e.preventDefault(); send(ta.value); });
+  ta.addEventListener('keydown', e => { if (e.key==='Enter' && !e.shiftKey){ e.preventDefault(); send(ta.value); }});
+  ta.addEventListener('input', () => { ta.style.height='auto'; ta.style.height=Math.min(ta.scrollHeight,120)+'px'; });
+  $('clr').onclick = () => { if (confirm('চ্যাট মুছে নতুন শুরু করবেন?')){ hist=[]; save(); render(); } };
+  $('spk').onclick = () => {
+    speak = !speak; localStorage.setItem('boss_speak', speak?'1':'0');
+    $('spk').classList.toggle('on', speak); if(!speak && window.speechSynthesis) speechSynthesis.cancel();
+  };
+
+  // ====== ভয়েস ইনপুট ======
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  let rec = null, listening = false;
+  function mic(){
+    if (!SR){ add('e','এই ব্রাউজারে ভয়েস ইনপুট নেই। Chrome ব্যবহার করুন।'); return; }
+    if (listening){ rec.stop(); return; }
+    rec = new SR(); rec.lang='bn-BD'; rec.interimResults=false;
+    rec.onstart = () => { listening=true; $('mic').classList.add('on'); $('st').textContent='শুনছি...'; };
+    rec.onend = () => { listening=false; $('mic').classList.remove('on'); $('st').textContent='অনলাইন'; };
+    rec.onerror = ev => add('e','মাইক সমস্যা: ' + ev.error);
+    rec.onresult = ev => { const s = ev.results[0][0].transcript; speak = true; $('spk').classList.add('on'); send(s); };
+    rec.start();
+  }
+  $('mic').onclick = mic;
+
+  render();
+  if (location.hash === '#voice') setTimeout(mic, 400);
+</script>
+</body>
+</html>
