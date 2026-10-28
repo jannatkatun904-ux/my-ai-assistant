@@ -2,223 +2,192 @@
 <html lang="bn">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#04100f">
-<title>Boss AI - চ্যাট</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>BOSS AI</title>
+<link rel="manifest" href="manifest.json">
 <style>
-  :root{--bg:#04100f;--teal:#19f0c8;--blue:#3aa0ff}
-  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-  html,body{height:100%}
-  body{background:radial-gradient(120% 70% at 70% 0%,#0a2a27 0%,var(--bg) 60%);color:#e8fffb;
-       font-family:system-ui,-apple-system,"Noto Sans Bengali",sans-serif;display:flex;flex-direction:column;
-       padding-top:env(safe-area-inset-top)}
-  header{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.08)}
-  .btn{width:42px;height:42px;border-radius:14px;border:1.5px solid var(--teal);background:rgba(25,240,200,.12);
-       display:grid;place-items:center;font-size:19px;cursor:pointer;color:#fff;flex:none}
-  .btn.on{background:var(--teal);box-shadow:0 0 14px var(--teal)}
-  .ava{width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid #a35bff;flex:none}
-  .title{flex:1;min-width:0}
-  .title b{display:block;font-size:17px;letter-spacing:1px}
-  .title small{font-size:11px;color:var(--teal)}
-  #msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
-  .m{max-width:84%;padding:10px 14px;border-radius:18px;font-size:15px;line-height:1.5;
-     white-space:pre-wrap;word-wrap:break-word}
-  .u{align-self:flex-end;background:linear-gradient(135deg,#3296ff,#7a4bff);border-bottom-right-radius:4px}
-  .a{align-self:flex-start;background:rgba(255,255,255,.08);border:1px solid rgba(25,240,200,.25);border-bottom-left-radius:4px}
-  .e{align-self:center;background:rgba(255,50,80,.15);border:1px solid rgba(255,50,80,.5);font-size:13px}
-  .dots span{display:inline-block;width:7px;height:7px;margin:0 2px;border-radius:50%;background:var(--teal);
-             animation:b 1s infinite}
-  .dots span:nth-child(2){animation-delay:.15s}.dots span:nth-child(3){animation-delay:.3s}
-  @keyframes b{0%,80%,100%{opacity:.25}40%{opacity:1}}
-  form{display:flex;gap:8px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));
-       border-top:1px solid rgba(255,255,255,.08);align-items:flex-end}
-  textarea{flex:1;resize:none;max-height:120px;border-radius:20px;border:1.5px solid rgba(25,240,200,.4);
-           background:rgba(255,255,255,.06);color:#fff;padding:11px 15px;font:inherit;font-size:15px;outline:none}
-  .send{background:var(--teal);color:#04100f;border-color:var(--teal)}
-  /* সেটিংস বক্স */
-  #ov{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;padding:16px;z-index:10}
-  #ov.show{display:flex}
-  .box{width:100%;max-width:520px;max-height:92%;overflow-y:auto;background:#0a1f1d;border:1.5px solid var(--teal);
-       border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:8px}
-  .box h3{font-size:16px}
-  .box label{font-size:13px;color:var(--teal)}
-  .box textarea,.box input{width:100%;max-height:none;border-radius:12px;padding:10px 12px;font-size:14px;
-       border:1.5px solid rgba(25,240,200,.4);background:rgba(255,255,255,.06);color:#fff;font-family:inherit;outline:none}
-  .box textarea{min-height:170px;resize:vertical}
-  .row{display:flex;gap:8px;margin-top:4px}
-  .row button{flex:1;padding:11px;border-radius:12px;border:1.5px solid var(--teal);background:transparent;color:#fff;font:inherit;font-size:14px}
-  .row .pri{background:var(--teal);color:#04100f;font-weight:700}
+:root{--bg:#0c1214;--panel:#13201f;--line:#1de9c6;--text:#e6f4f1;--mute:#7fa8a1;--me:#5b6cff;--err:#3a1519}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{background:var(--bg);color:var(--text);font-family:system-ui,"Noto Sans Bengali",sans-serif;display:flex;flex-direction:column}
+header{display:flex;align-items:center;gap:10px;padding:10px 12px;padding-top:calc(10px + env(safe-area-inset-top,0px));border-bottom:1px solid #1b2c2a}
+.ib{width:46px;height:46px;border-radius:12px;border:1.5px solid var(--line);background:#0f1a19;color:var(--line);font-size:20px;cursor:pointer}
+.ib.on{background:var(--line);color:#042}
+header img{width:48px;height:48px;border-radius:50%;border:2px solid #9b5cff;object-fit:cover}
+.who{flex:1;min-width:0}
+.who b{font-size:18px;letter-spacing:1px}
+.who small{display:block;color:var(--line);font-size:13px}
+#chat{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:12px}
+.m{max-width:88%;padding:12px 14px;border-radius:16px;line-height:1.6;font-size:16px;white-space:pre-wrap;word-wrap:break-word}
+.bot{background:var(--panel);border:1px solid #1d3836;align-self:flex-start}
+.me{background:linear-gradient(135deg,#3b82f6,var(--me));align-self:flex-end}
+.err{background:var(--err);border:1px solid #7a2a31;align-self:center;font-size:14px}
+pre{background:#071010;border:1px solid #1d3836;border-radius:10px;padding:10px;overflow-x:auto;margin:8px 0;white-space:pre;font-size:13px}
+code{font-family:ui-monospace,monospace}
+footer{display:flex;gap:8px;padding:10px 12px;padding-bottom:calc(10px + env(safe-area-inset-bottom,0px));border-top:1px solid #1b2c2a}
+#inp{flex:1;border:1.5px solid #1d5a52;border-radius:24px;background:#0f1a19;color:var(--text);padding:12px 16px;font-size:16px;outline:none;resize:none;max-height:120px;font-family:inherit}
+#inp:focus{border-color:var(--line)}
+#send{background:var(--line);color:#042;border:0;border-radius:14px;width:54px;font-size:22px;cursor:pointer}
+#send:disabled{opacity:.5}
+dialog{margin:auto;width:min(92vw,420px);background:#101b1a;color:var(--text);border:1.5px solid var(--line);border-radius:16px;padding:18px}
+dialog::backdrop{background:#000a}
+label{display:block;margin:12px 0 4px;font-size:14px;color:var(--mute)}
+dialog input,dialog select{width:100%;padding:11px;border-radius:10px;border:1px solid #1d5a52;background:#0c1514;color:var(--text);font-size:15px}
+.row{display:flex;gap:8px;margin-top:16px}
+.row button{flex:1;padding:11px;border-radius:10px;border:1.5px solid var(--line);background:#0f1a19;color:var(--text);font-size:15px;cursor:pointer}
+.row .pri{background:var(--line);color:#042}
 </style>
 </head>
 <body>
-
 <header>
-  <div class="btn" onclick="location.href='index.html'">←</div>
-  <img class="ava" src="avatar.jpg" alt="">
-  <div class="title"><b>BOSS AI</b><small id="st">অনলাইন</small></div>
-  <div class="btn" id="spk" title="উত্তর শোনা">🔊</div>
-  <div class="btn" id="cfg" title="সেটিংস">⚙️</div>
-  <div class="btn" id="clr" title="নতুন চ্যাট">🗑</div>
+  <button class="ib" onclick="location.href='home.html'" aria-label="ফিরে যান">←</button>
+  <img src="avatar.jpg" alt="">
+  <div class="who"><b>BOSS AI</b><small>অনলাইন</small></div>
+  <button class="ib on" id="vbtn" aria-label="ভয়েস চালু/বন্ধ">🔊</button>
+  <button class="ib" id="sbtn" aria-label="সেটিংস">⚙️</button>
+  <button class="ib" id="cbtn" aria-label="চ্যাট মুছুন">🗑️</button>
 </header>
 
-<div id="msgs"></div>
+<div id="chat"></div>
 
-<form id="f">
-  <div class="btn" id="mic">🎤</div>
-  <textarea id="t" rows="1" placeholder="কিছু লিখুন বা মাইক চাপুন..."></textarea>
-  <button class="btn send" type="submit">➤</button>
-</form>
+<footer>
+  <button class="ib" id="mic" aria-label="মাইক">🎤</button>
+  <textarea id="inp" rows="1" placeholder="কিছু লিখুন বা মাইক চাপুন..."></textarea>
+  <button id="send" aria-label="পাঠান">➤</button>
+</footer>
 
-<div id="ov">
-  <div class="box">
-    <h3>⚙️ সেটিংস</h3>
-    <label>আমার নির্দেশনা (AI এই নিয়মেই কাজ করবে)</label>
-    <textarea id="sysbox"></textarea>
-    <label>Groq API Key (শুধু এই ফোনেই থাকবে)</label>
-    <input id="keybox" type="password" placeholder="gsk_..." autocomplete="off">
-    <div class="row">
-      <button id="reset" type="button">ডিফল্ট</button>
-      <button id="cancel" type="button">বাতিল</button>
-      <button id="ok" type="button" class="pri">সেভ</button>
-    </div>
+<dialog id="dlg">
+  <b style="font-size:18px">সেটিংস</b>
+  <label for="key">Groq API Key</label>
+  <input id="key" type="password" placeholder="gsk_..." autocomplete="off">
+  <label for="model">মডেল</label>
+  <select id="model">
+    <option value="openai/gpt-oss-120b">openai/gpt-oss-120b (সেরা)</option>
+    <option value="openai/gpt-oss-20b">openai/gpt-oss-20b (দ্রুত)</option>
+    <option value="qwen/qwen3.6-27b">qwen/qwen3.6-27b</option>
+  </select>
+  <div class="row">
+    <button onclick="dlg.close()">বন্ধ করুন</button>
+    <button class="pri" id="save">সেভ করুন</button>
   </div>
-</div>
+</dialog>
 
-<script src="voice.js"></script>
 <script>
-  // ====== সেটিংস ======
-  const MODEL = 'llama-3.3-70b-versatile';
-  const API = 'https://api.groq.com/openai/v1/chat/completions';
-  const DEFAULT_SYSTEM = 'তুমি BOSS AI, ব্যবহারকারীর ব্যক্তিগত বাংলা সহকারী। ব্যবহারকারী যে ভাষায় লেখে সেই ভাষায় উত্তর দাও, ডিফল্ট বাংলা। উত্তর ছোট, বন্ধুত্বপূর্ণ ও পরিষ্কার রাখো।';
+const $ = id => document.getElementById(id);
+const chat = $('chat'), inp = $('inp'), dlg = $('dlg');
+const SYSTEM = "তুমি BOSS AI, একজন বন্ধুসুলভ ও দক্ষ সহকারী। ব্যবহারকারী বাংলায় লিখলে সহজ বাংলায় উত্তর দাও। কোডিং প্রশ্নে পরিষ্কার ধাপ আর কোড ব্লক (```) দিয়ে উত্তর দাও। উত্তর সংক্ষিপ্ত রাখো।";
+let history = JSON.parse(localStorage.getItem('boss_history') || '[]');
+let voiceOn = localStorage.getItem('boss_voice') !== 'off';
+let busy = false;
 
-  const $ = id => document.getElementById(id);
-  const box = $('msgs'), ta = $('t');
-  const clean = s => (s || '').replace(/[^\x21-\x7E]/g, '');
-  let hist = [];
-  try { hist = JSON.parse(localStorage.getItem('boss_hist') || '[]'); } catch(e){}
-  let speak = localStorage.getItem('boss_speak') === '1';
-  $('spk').classList.toggle('on', speak);
+function esc(s){return s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))}
+function render(text){
+  return esc(text).replace(/```(?:\w+)?\n?([\s\S]*?)```/g,(_,c)=>'<pre><code>'+c+'</code></pre>')
+    .replace(/\*\*(.+?)\*\*/g,'<b>$1</b>');
+}
+function add(role, text){
+  const d = document.createElement('div');
+  d.className = 'm ' + role;
+  if (role === 'bot') d.innerHTML = render(text); else d.textContent = text;
+  chat.appendChild(d);
+  chat.scrollTop = chat.scrollHeight;
+  return d;
+}
+function save(){localStorage.setItem('boss_history', JSON.stringify(history.slice(-30)))}
 
-  const getSys = () => localStorage.getItem('boss_sys') || DEFAULT_SYSTEM;
-  const getKey = () => clean(localStorage.getItem('boss_groqkey'));
+/* ---------- ভয়েস (মেয়েলি কণ্ঠ) ---------- */
+let voices = [];
+function loadVoices(){voices = speechSynthesis.getVoices()}
+if ('speechSynthesis' in window){loadVoices();speechSynthesis.onvoiceschanged = loadVoices}
+function pickVoice(){
+  const bn = voices.filter(v => /^bn/i.test(v.lang));
+  const fem = /female|woman|girl|nabanita|tanishaa|priya|zira|samantha|google/i;
+  return bn.find(v => fem.test(v.name)) || bn[0] || null;
+}
+function speak(text){
+  if (!voiceOn || !('speechSynthesis' in window)) return;
+  speechSynthesis.cancel();
+  const clean = text.replace(/```[\s\S]*?```/g,' কোড দেখুন। ').replace(/[*#`]/g,'');
+  const u = new SpeechSynthesisUtterance(clean);
+  const v = pickVoice();
+  if (v){u.voice = v; u.lang = v.lang} else u.lang = 'bn-BD';
+  u.pitch = 1.25; u.rate = 1;
+  speechSynthesis.speak(u);
+}
+function paintVoice(){$('vbtn').classList.toggle('on', voiceOn); $('vbtn').textContent = voiceOn ? '🔊' : '🔇'}
+$('vbtn').onclick = () => {
+  voiceOn = !voiceOn;
+  localStorage.setItem('boss_voice', voiceOn ? 'on' : 'off');
+  if (!voiceOn) speechSynthesis.cancel();
+  paintVoice();
+};
+paintVoice();
 
-  function openCfg(){
-    $('sysbox').value = getSys();
-    $('keybox').value = getKey();
-    $('ov').classList.add('show');
+/* ---------- মাইক ---------- */
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+$('mic').onclick = () => {
+  if (!SR) return add('err','এই ব্রাউজারে মাইক সাপোর্ট নেই। Chrome ব্যবহার করুন।');
+  const r = new SR();
+  r.lang = 'bn-BD';
+  r.onstart = () => $('mic').classList.add('on');
+  r.onend = () => $('mic').classList.remove('on');
+  r.onresult = e => {inp.value = e.results[0][0].transcript; send()};
+  r.onerror = e => add('err','মাইক সমস্যা: ' + e.error);
+  r.start();
+};
+
+/* ---------- সেটিংস ---------- */
+$('sbtn').onclick = () => {
+  $('key').value = localStorage.getItem('boss_key') || '';
+  $('model').value = localStorage.getItem('boss_model') || 'openai/gpt-oss-120b';
+  dlg.showModal();
+};
+$('save').onclick = () => {
+  localStorage.setItem('boss_key', $('key').value.trim());
+  localStorage.setItem('boss_model', $('model').value);
+  dlg.close();
+};
+$('cbtn').onclick = () => {
+  if (!confirm('সব চ্যাট মুছে ফেলবেন?')) return;
+  history = []; save(); chat.innerHTML = ''; speechSynthesis.cancel();
+};
+
+/* ---------- চ্যাট ---------- */
+async function send(){
+  const text = inp.value.trim();
+  if (!text || busy) return;
+  const key = localStorage.getItem('boss_key');
+  if (!key){add('err','প্রথমে ⚙️ সেটিংসে গিয়ে Groq API Key দিন।'); return}
+  const model = localStorage.getItem('boss_model') || 'openai/gpt-oss-120b';
+  inp.value = ''; inp.style.height = 'auto';
+  add('me', text);
+  history.push({role:'user', content:text});
+  busy = true; $('send').disabled = true;
+  const wait = add('bot','...');
+  try{
+    const res = await fetch('https://api.groq.com/openai/v1/chat/completions',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
+      body:JSON.stringify({model, messages:[{role:'system',content:SYSTEM}, ...history.slice(-20)], temperature:0.7})
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error?.message || ('HTTP ' + res.status));
+    const reply = data.choices[0].message.content || '';
+    wait.innerHTML = render(reply);
+    history.push({role:'assistant', content:reply});
+    save(); speak(reply);
+  }catch(e){
+    wait.className = 'm err'; wait.textContent = 'সমস্যা: ' + e.message;
+    history.pop();
   }
-  function closeCfg(){ $('ov').classList.remove('show'); }
-  $('cfg').onclick = openCfg;
-  $('cancel').onclick = closeCfg;
-  $('reset').onclick = () => { $('sysbox').value = DEFAULT_SYSTEM; };
-  $('ok').onclick = () => {
-    const s = $('sysbox').value.trim();
-    localStorage.setItem('boss_sys', s || DEFAULT_SYSTEM);
-    const k = clean($('keybox').value);
-    if (k) localStorage.setItem('boss_groqkey', k);
-    closeCfg();
-  };
+  busy = false; $('send').disabled = false;
+  chat.scrollTop = chat.scrollHeight;
+}
+$('send').onclick = send;
+inp.addEventListener('keydown', e => {if (e.key === 'Enter' && !e.shiftKey){e.preventDefault(); send()}});
+inp.addEventListener('input', () => {inp.style.height = 'auto'; inp.style.height = inp.scrollHeight + 'px'});
 
-  function add(cls, text){
-    const d = document.createElement('div');
-    d.className = 'm ' + cls; d.textContent = text;
-    box.appendChild(d); box.scrollTop = box.scrollHeight; return d;
-  }
-  function save(){ localStorage.setItem('boss_hist', JSON.stringify(hist.slice(-40))); }
-  function render(){
-    box.innerHTML = '';
-    if (!hist.length) add('a', 'হ্যালো! আমি BOSS AI, আপনার ব্যক্তিগত সহকারী। বলুন, আমি কী করতে পারি?');
-    hist.forEach(m => add(m.role === 'user' ? 'u' : 'a', m.content));
-  }
-
-  function say(text){
-    if (!speak) return;
-    if (typeof bossSpeak === 'function'){ bossSpeak(text); return; }
-    if (!('speechSynthesis' in window)) return;
-    speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(text); u.lang = 'bn-BD'; u.pitch = 1.25;
-    speechSynthesis.speak(u);
-  }
-
-  async function send(text){
-    text = text.trim(); if (!text) return;
-    const key = getKey();
-    if (!key){ add('e','Groq API Key নেই। ⚙️ চেপে কী দিন।'); openCfg(); return; }
-    add('u', text); hist.push({role:'user', content:text}); ta.value=''; ta.style.height='auto';
-    const wait = document.createElement('div');
-    wait.className='m a dots'; wait.innerHTML='<span></span><span></span><span></span>';
-    box.appendChild(wait); box.scrollTop = box.scrollHeight; $('st').textContent='ভাবছি...';
-    let bubble = null, out = '';
-    try{
-      const r = await fetch(API,{
-        method:'POST',
-        headers:{'content-type':'application/json','authorization':'Bearer ' + key},
-        body:JSON.stringify({
-          model:MODEL, stream:true, max_tokens:800, temperature:0.7,
-          messages:[{role:'system', content:getSys()}].concat(hist.slice(-12))
-        })
-      });
-      if (!r.ok){
-        const j = await r.json().catch(() => ({}));
-        throw new Error((j.error && j.error.message) || ('ত্রুটি ' + r.status));
-      }
-      const reader = r.body.getReader(), dec = new TextDecoder();
-      let buf = '';
-      while (true){
-        const {done, value} = await reader.read(); if (done) break;
-        buf += dec.decode(value, {stream:true});
-        const lines = buf.split('\n'); buf = lines.pop();
-        for (const ln of lines){
-          if (!ln.startsWith('data:')) continue;
-          const s = ln.slice(5).trim(); if (!s || s === '[DONE]') continue;
-          try{
-            const j = JSON.parse(s);
-            const tx = (j.choices && j.choices[0] && j.choices[0].delta && j.choices[0].delta.content) || '';
-            if (tx){
-              out += tx;
-              if (!bubble){ wait.remove(); bubble = add('a', ''); $('st').textContent='লিখছি...'; }
-              bubble.textContent = out; box.scrollTop = box.scrollHeight;
-            }
-          }catch(e){}
-        }
-      }
-      out = out.trim();
-      if (!out){ wait.remove(); out = '(খালি উত্তর)'; add('a', out); }
-      hist.push({role:'assistant', content:out}); save(); say(out);
-    }catch(err){
-      wait.remove(); if (bubble) bubble.remove(); hist.pop();
-      add('e', 'সমস্যা: ' + err.message + (/key|auth|invalid/i.test(err.message) ? ' — ⚙️ চেপে সঠিক কী দিন।' : ''));
-    }
-    $('st').textContent='অনলাইন';
-  }
-
-  // ====== ইভেন্ট ======
-  $('f').addEventListener('submit', e => { e.preventDefault(); send(ta.value); });
-  ta.addEventListener('keydown', e => { if (e.key==='Enter' && !e.shiftKey){ e.preventDefault(); send(ta.value); }});
-  ta.addEventListener('input', () => { ta.style.height='auto'; ta.style.height=Math.min(ta.scrollHeight,120)+'px'; });
-  $('clr').onclick = () => { if (confirm('চ্যাট মুছে নতুন শুরু করবেন?')){ hist=[]; save(); render(); } };
-  $('spk').onclick = () => {
-    speak = !speak; localStorage.setItem('boss_speak', speak?'1':'0');
-    $('spk').classList.toggle('on', speak); if(!speak && window.speechSynthesis) speechSynthesis.cancel();
-  };
-
-  // ====== ভয়েস ইনপুট ======
-  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  let rec = null, listening = false;
-  function mic(){
-    if (!SR){ add('e','এই ব্রাউজারে ভয়েস ইনপুট নেই। Chrome ব্যবহার করুন।'); return; }
-    if (listening){ rec.stop(); return; }
-    rec = new SR(); rec.lang='bn-BD'; rec.interimResults=false;
-    rec.onstart = () => { listening=true; $('mic').classList.add('on'); $('st').textContent='শুনছি...'; };
-    rec.onend = () => { listening=false; $('mic').classList.remove('on'); $('st').textContent='অনলাইন'; };
-    rec.onerror = ev => add('e','মাইক সমস্যা: ' + ev.error);
-    rec.onresult = ev => { const s = ev.results[0][0].transcript; speak = true; $('spk').classList.add('on'); send(s); };
-    rec.start();
-  }
-  $('mic').onclick = mic;
-
-  render();
-  if (location.hash === '#voice') setTimeout(mic, 400);
+history.forEach(m => add(m.role === 'user' ? 'me' : 'bot', m.content));
 </script>
 </body>
 </html>
